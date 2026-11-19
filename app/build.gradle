@@ -1,5 +1,3 @@
-import com.android.build.api.variant.FilterConfiguration.FilterType
-
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
@@ -54,7 +52,7 @@ def abiVersionCodes = ['armeabi-v7a': -3, 'arm64-v8a': -2, 'x86': -1, 'x86_64': 
 androidComponents {
     onVariants(selector().all()) { variant ->
         variant.outputs.each { output ->
-            def abi = output.filters.find { it.filterType == FilterType.ABI }?.identifier
+            def abi = output.filters.find { it.filterType.name() == 'ABI' }?.identifier
             if (abi != null) {
                 output.versionCode.set(output.versionCode.get() + abiVersionCodes[abi])
             }
