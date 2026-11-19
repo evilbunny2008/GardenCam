@@ -11,7 +11,6 @@ import com.vladpen.cams.MainApp.Companion.context
 import com.vladpen.onvif.DeviceCapabilities
 import com.vladpen.onvif.ONVIFCredentials
 import com.vladpen.onvif.ONVIFSecurity
-import com.vladpen.cams.MainApp.Companion.context
 
 data class StreamDataModel(
     val name: String,
@@ -32,14 +31,22 @@ data class StreamDataModel(
     // Secure credential access
     val onvifCredentials: ONVIFCredentials?
         get() = encryptedCredentials?.let { 
-            ONVIFSecurity.decryptCredentials(context, it) 
+            ONVIFSecurity.decryptCredentials(it)
         }
+
+    val hasUnencryptedCredentials: Boolean
+        get() = encryptedCredentials?.let { !ONVIFSecurity.isEncrypted(it) } == true
     
     fun withCredentials(credentials: ONVIFCredentials?): StreamDataModel {
         val encrypted = credentials?.let { 
-            ONVIFSecurity.encryptCredentials(context, it) 
+            ONVIFSecurity.encryptCredentials(it)
         }
         return copy(encryptedCredentials = encrypted)
+    }
+
+    // Device-independent credentials for settings export
+    fun withPortableCredentials(): StreamDataModel {
+        return copy(encryptedCredentials = onvifCredentials?.let { ONVIFSecurity.encodePortable(it) })
     }
 }
 
@@ -62,10 +69,23 @@ object StreamData {
                     it.readText()
                 }
                 fromJson(json)
-            }
+            }.also { encryptCredentials() }
         } catch (_: Exception) {
             streams
         }
+    }
+
+    // Encrypt credentials saved by older versions or restored from a settings export
+    fun encryptCredentials() {
+        if (streams.none { it.hasUnencryptedCredentials })
+            return
+        streams.replaceAll { stream ->
+            if (!stream.hasUnencryptedCredentials) return@replaceAll stream
+            // Keep the old value if encryption fails rather than losing the credentials
+            stream.withCredentials(stream.onvifCredentials).takeIf { it.onvifCredentials != null } ?: stream
+        }
+        save()
+        ONVIFSecurity.deleteLegacyKey(context)
     }
 
     fun getById(streamId: Int): StreamDataModel? {

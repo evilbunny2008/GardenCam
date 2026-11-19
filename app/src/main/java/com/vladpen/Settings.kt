@@ -151,6 +151,7 @@ class Settings(val context: MainActivity)  {
         StreamData.fromJson(rows[0])
         encodeStreams()
         StreamData.save()
+        StreamData.encryptCredentials()
         if (rows.count() > 1) {
             GroupData.fromJson(rows[1])
             GroupData.save()
@@ -179,7 +180,7 @@ class Settings(val context: MainActivity)  {
     }
 
     private fun encodeSettings(): String {
-        val decodedStreams = decodeStreams(StreamData.getAll().map { it.copy() })
+        val decodedStreams = decodeStreams(StreamData.getAll().map { it.withPortableCredentials() })
         val streams = StreamData.toJson(decodedStreams)
         val groups = GroupData.toJson(GroupData.getAll())
         val sources = SourceData.toJson(SourceData.getAll())

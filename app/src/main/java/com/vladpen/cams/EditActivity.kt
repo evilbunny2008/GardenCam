@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 import com.vladpen.cams.databinding.ActivityEditBinding
 import com.vladpen.onvif.*
 import kotlinx.coroutines.*
+import java.util.Locale
 
 class EditActivity : AppCompatActivity() {
     private val binding by lazy { ActivityEditBinding.inflate(layoutInflater) }
@@ -72,7 +73,8 @@ class EditActivity : AppCompatActivity() {
                 binding.etOnvifUrl.setText(onvifUrl)
                 binding.cbInvertHorizontal.isChecked = stream.invertHorizontalPTZ
                 binding.cbInvertVertical.isChecked = stream.invertVerticalPTZ
-                binding.etPtzRateLimit.setText(stream.ptzRateLimit.toString())
+                // ASCII digits so the value parses back with toLong()
+                binding.etPtzRateLimit.setText(String.format(Locale.ROOT, "%d", stream.ptzRateLimit))
             }
 
             val startup = SourceData.getStartup()

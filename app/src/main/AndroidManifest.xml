@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
@@ -36,9 +37,12 @@
         <activity
             android:name=".GroupEditActivity"
             android:exported="false" />
+        <!-- Landscape is preferred on phones; on large screens Android 16+ ignores the lock
+             and onConfigurationChanged() re-lays out for any orientation -->
         <activity
             android:name=".StreamsActivity"
             android:screenOrientation="landscape"
+            tools:ignore="DiscouragedApi"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:exported="false" />
         <activity

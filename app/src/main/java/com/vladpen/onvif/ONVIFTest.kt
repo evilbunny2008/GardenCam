@@ -1,16 +1,18 @@
 package com.vladpen.onvif
 
+import android.annotation.SuppressLint
 import android.util.Log
 import kotlinx.coroutines.runBlocking
 
 class ONVIFTest {
     companion object {
+        @SuppressLint("AuthLeak") // placeholder credentials only
         fun testStreamDiscovery() {
             runBlocking {
                 try {
                     Log.d("ONVIF_TEST", "Starting ONVIF test...")
                     
-                    val onvifUrl = "onvif://thingino:AjVHVSUPOoZQkGG2U@10.0.0.51:80/onvif/device_service"
+                    val onvifUrl = "onvif://user:pass@192.168.1.100:80/onvif/device_service"
                     val parsed = ONVIFUrlParser.parseOnvifUrl(onvifUrl)
                     
                     if (parsed == null) {
