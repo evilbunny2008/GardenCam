@@ -29,6 +29,13 @@ class MotionIndicator @JvmOverloads constructor(
         typeface = Typeface.DEFAULT_BOLD
     }
 
+    private val iconBgPaint = Paint().apply {
+        color = Color.BLACK
+        isAntiAlias = true
+    }
+
+    private val borderRect = RectF()
+
     private var isMotionDetected = false
     private var borderAlpha = 0f
     private var iconAlpha = 0f
@@ -97,7 +104,7 @@ class MotionIndicator @JvmOverloads constructor(
         val height = height.toFloat()
         
         // Draw red border around the entire view
-        val borderRect = RectF(4f, 4f, width - 4f, height - 4f)
+        borderRect.set(4f, 4f, width - 4f, height - 4f)
         canvas.drawRect(borderRect, borderPaint)
         
         // Draw motion icon in top-right corner
@@ -105,11 +112,7 @@ class MotionIndicator @JvmOverloads constructor(
         val iconY = 60f
         
         // Draw motion icon background circle
-        val iconBgPaint = Paint().apply {
-            color = Color.BLACK
-            alpha = (iconAlpha * 100).toInt()
-            isAntiAlias = true
-        }
+        iconBgPaint.alpha = (iconAlpha * 100).toInt()
         canvas.drawCircle(iconX, iconY, 25f, iconBgPaint)
         
         // Draw motion icon (simplified motion symbol)

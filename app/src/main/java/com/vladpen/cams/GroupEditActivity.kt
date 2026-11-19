@@ -150,7 +150,7 @@ class GroupEditActivity : AppCompatActivity() {
         if (!ok)
             return false
         if (selectedStreams.count() < STREAMS_MIN) {
-            binding.tvStreamsError.text = getString(R.string.err_group_streams_count, STREAMS_MIN)
+            binding.tvStreamsError.text = resources.getQuantityString(R.plurals.err_group_streams_count, STREAMS_MIN, STREAMS_MIN)
             ok = false
         } else {
             binding.tvStreamsError.text = ""

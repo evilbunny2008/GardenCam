@@ -1,5 +1,5 @@
-<resources>
-    <string name="app_name">ONVIF Camera</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name" tools:ignore="Typos">ONVIF Camera</string>
     <string name="main_title">Câmeras</string>
     <string name="cam_add">Adicionar câmera</string>
     <string name="cam_name">Nome *</string>
@@ -29,11 +29,9 @@
     <string name="err_channels_equal">Channel addresses match</string>
     <string name="files">Arquivos</string>
     <string name="MB">MB</string>
-    <string name="file_prev">Arquivo anterior</string>
-    <string name="file_next">Próximo arquivo</string>
-    <string name="seek_back">Retrocesso rápido</string>
-    <string name="play_pause">Reproduzir/Pausar</string>
     <string name="mute">Silenciar</string>
+    <string name="mic_toggle">Alternar microfone</string>
+    <string name="mic_permission_denied">Permissão de microfone necessária para áudio bidirecional</string>
     <string name="group_add">Add group</string>
     <string name="group_name_hint">New group</string>
     <string name="group_cams">Cameras *</string>
@@ -42,14 +40,20 @@
         Attention! A large number of cameras can significantly reduce the device performance!
     </string>
     <string name="err_group_exists">Group already exists</string>
-    <string name="err_group_streams_count">At least %1$d cameras</string>
+    <plurals name="err_group_streams_count">
+        <item quantity="one">Pelo menos %1$d câmera</item>
+        <item quantity="many">Pelo menos %1$d câmeras</item>
+        <item quantity="other">Pelo menos %1$d câmeras</item>
+    </plurals>
     <string name="stretch_images">Stretch images (for all groups)</string>
     <string name="show_on_startup">Show on startup</string>
     <string name="export_settings">Export settings</string>
     <string name="import_settings">Import settings</string>
-    <string name="export_password">
-        Password for file encrypt (at least %1$d characters or leave empty):
-    </string>
+    <plurals name="export_password">
+        <item quantity="one">Senha para criptografar o arquivo (pelo menos %1$d caractere ou deixe em branco):</item>
+        <item quantity="many">Senha para criptografar o arquivo (pelo menos %1$d caracteres ou deixe em branco):</item>
+        <item quantity="other">Senha para criptografar o arquivo (pelo menos %1$d caracteres ou deixe em branco):</item>
+    </plurals>
     <string name="export_password_confirm">Confirm password:</string>
     <string name="import_password">Password specified during export:</string>
     <string name="btn_continue">Continue</string>
@@ -74,4 +78,10 @@
     <string name="log_cons_hint">
         (Not recommended for security reasons. Valid until the application is closed.)
     </string>
+    <string name="onvif_discover">Descobrir câmeras ONVIF</string>
+    <string name="onvif_config">Configuração ONVIF</string>
+    <string name="onvif_url_hint">URL ONVIF (ex.: onvif://username:password@192.168.1.100:80/onvif/device_service)</string>
+    <string name="ptz_invert_horizontal">Inverter PTZ horizontal</string>
+    <string name="ptz_invert_vertical">Inverter PTZ vertical</string>
+    <string name="ptz_rate_limit">"Limite de taxa PTZ (ms): "</string>
 </resources>

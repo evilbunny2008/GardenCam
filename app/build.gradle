@@ -4,12 +4,12 @@ plugins {
 }
 
 android {
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId 'uk.org.retallack.onvifcamera'
         minSdk 24
-        targetSdk 36
+        targetSdk 37
         versionCode 10101370
         versionName '2.5.0'
         base.archivesName = 'cams'

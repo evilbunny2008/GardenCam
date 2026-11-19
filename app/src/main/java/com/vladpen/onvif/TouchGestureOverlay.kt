@@ -111,11 +111,16 @@ class TouchGestureOverlay @JvmOverloads constructor(
                     isActive = false
                     gestureListener?.onGestureEnd()
                     startReturnAnimation()
+                    if (event.action == MotionEvent.ACTION_UP) performClick()
                     return true
                 }
             }
         }
         return false
+    }
+
+    override fun performClick(): Boolean {
+        return super.performClick()
     }
     
     private fun cancelAnimations() {

@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:padding="10dp"
-                android:text="Discover ONVIF Cameras"
+                android:text="@string/onvif_discover"
                 android:textColor="@color/files_link"
                 android:background="?attr/selectableItemBackground" />
 
@@ -48,7 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="ONVIF Configuration"
+                android:text="@string/onvif_config"
                 android:textStyle="bold" />
 
             <EditText
@@ -56,7 +56,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="ONVIF URL (e.g., onvif://username:password@192.168.1.100:80/onvif/device_service)"
+                android:hint="@string/onvif_url_hint"
                 android:inputType="textUri"
                 android:textSize="16sp"
                 android:autofillHints="" />
@@ -66,13 +66,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Invert Horizontal PTZ" />
+                android:text="@string/ptz_invert_horizontal" />
 
             <CheckBox
                 android:id="@+id/cbInvertVertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Invert Vertical PTZ" />
+                android:text="@string/ptz_invert_vertical" />
 
             <LinearLayout
                 android:id="@+id/llPtzRateLimit"
@@ -84,7 +84,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="PTZ Rate Limit (ms): "
+                    android:text="@string/ptz_rate_limit"
                     android:layout_gravity="center_vertical" />
 
                 <EditText
@@ -92,7 +92,8 @@
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:inputType="number"
-                    android:hint="200"
+                    android:hint="@string/ptz_rate_limit_hint"
+                    android:importantForAutofill="no"
                     android:textSize="16sp" />
 
             </LinearLayout>

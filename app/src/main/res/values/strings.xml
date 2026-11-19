@@ -29,10 +29,6 @@
     <string name="err_channels_equal">Channel addresses match</string>
     <string name="files">Files</string>
     <string name="MB">MB</string>
-    <string name="file_prev">Previous file</string>
-    <string name="file_next">Next file</string>
-    <string name="seek_back">Seek back</string>
-    <string name="play_pause">Play/Pause</string>
     <string name="mute">Mute</string>
     <string name="mic_toggle">Toggle microphone</string>
     <string name="mic_permission_denied">Microphone permission required for two-way audio</string>
@@ -44,14 +40,18 @@
         Attention! A large number of cameras can significantly reduce the device performance!
     </string>
     <string name="err_group_exists">Group already exists</string>
-    <string name="err_group_streams_count">At least %1$d cameras</string>
+    <plurals name="err_group_streams_count">
+        <item quantity="one">At least %1$d camera</item>
+        <item quantity="other">At least %1$d cameras</item>
+    </plurals>
     <string name="stretch_images">Stretch images (for all groups)</string>
     <string name="show_on_startup">Show on startup</string>
     <string name="export_settings">Export settings</string>
     <string name="import_settings">Import settings</string>
-    <string name="export_password">
-        Password for file encrypt (at least %1$d characters or leave empty):
-    </string>
+    <plurals name="export_password">
+        <item quantity="one">Password for file encrypt (at least %1$d character or leave empty):</item>
+        <item quantity="other">Password for file encrypt (at least %1$d characters or leave empty):</item>
+    </plurals>
     <string name="export_password_confirm">Confirm password:</string>
     <string name="import_password">Password specified during export:</string>
     <string name="btn_continue">Continue</string>
@@ -81,4 +81,11 @@
     <string name="log_cons_hint">
         (Not recommended for security reasons. Valid until the application is closed.)
     </string>
+    <string name="onvif_discover">Discover ONVIF Cameras</string>
+    <string name="onvif_config">ONVIF Configuration</string>
+    <string name="onvif_url_hint">ONVIF URL (e.g., onvif://username:password@192.168.1.100:80/onvif/device_service)</string>
+    <string name="ptz_invert_horizontal">Invert Horizontal PTZ</string>
+    <string name="ptz_invert_vertical">Invert Vertical PTZ</string>
+    <string name="ptz_rate_limit">"PTZ Rate Limit (ms): "</string>
+    <string name="ptz_rate_limit_hint" translatable="false">200</string>
 </resources>

@@ -234,7 +234,7 @@ class Settings(val context: MainActivity)  {
 
     private fun getExportDialogContent(): LinearLayout {
         val layout = getLayout()
-        layout.addView(getTextView(context.getString(R.string.export_password, MIN_PASSWORD_LEN)))
+        layout.addView(getTextView(context.resources.getQuantityString(R.plurals.export_password, MIN_PASSWORD_LEN, MIN_PASSWORD_LEN)))
         layout.addView(input)
 
         layout.addView(getTextView(context.getString(R.string.export_password_confirm)))

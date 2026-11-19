@@ -82,7 +82,7 @@ class ONVIFSoapClient(
     private fun createWSSecurityHeader(creds: ONVIFCredentials): String {
         val created = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).format(Date())
         val nonceBytes = UUID.randomUUID().toString().replace("-", "").substring(0, 16).toByteArray()
-        val nonceBase64 = Base64.getEncoder().encodeToString(nonceBytes)
+        val nonceBase64 = android.util.Base64.encodeToString(nonceBytes, android.util.Base64.NO_WRAP)
         val digest = createPasswordDigest(nonceBytes, created, creds.password)
 
         return """
@@ -100,7 +100,7 @@ class ONVIFSoapClient(
     private fun createPasswordDigest(nonceBytes: ByteArray, created: String, password: String): String {
         val digest = MessageDigest.getInstance("SHA-1")
         val input = nonceBytes + created.toByteArray() + password.toByteArray()
-        return Base64.getEncoder().encodeToString(digest.digest(input))
+        return android.util.Base64.encodeToString(digest.digest(input), android.util.Base64.NO_WRAP)
     }
 
     private fun sendHttpRequest(soapEnvelope: String): String? {

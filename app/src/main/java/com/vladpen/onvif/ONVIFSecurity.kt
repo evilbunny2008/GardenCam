@@ -3,6 +3,7 @@ package com.vladpen.onvif
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Base64
+import androidx.core.content.edit
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
@@ -72,7 +73,7 @@ object ONVIFSecurity {
             // Store key
             val keyBytes = key.encoded
             val keyString64 = Base64.encodeToString(keyBytes, Base64.DEFAULT)
-            prefs.edit().putString(KEY_ALIAS, keyString64).apply()
+            prefs.edit { putString(KEY_ALIAS, keyString64) }
             
             key
         }

@@ -1,9 +1,11 @@
 package com.vladpen.cams
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Rect
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -21,6 +23,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.Insets
 import androidx.core.net.toUri
+import androidx.core.view.isVisible
 import com.vladpen.*
 import com.vladpen.Effects.edgeToEdge
 import com.vladpen.cams.databinding.ActivityStreamsBinding
@@ -241,6 +244,8 @@ class StreamsActivity : AppCompatActivity(), Layout {
 
     // === Backchannel Mic ===
 
+    // btnMic is push-to-talk; the touch listener calls performClick() on release
+    @SuppressLint("ClickableViewAccessibility")
     private fun initMic() {
         if (isGroup) return
         val stream = StreamData.getById(sourceId) ?: return
@@ -258,13 +263,17 @@ class StreamsActivity : AppCompatActivity(), Layout {
                     backchannelManager = manager
                     withContext(Dispatchers.Main) {
                         binding.btnMic.visibility = View.VISIBLE
-                        binding.btnMic.setOnTouchListener { _, event ->
+                        binding.btnMic.setOnTouchListener { v, event ->
                             when (event.action) {
                                 android.view.MotionEvent.ACTION_DOWN -> {
                                     onMicPress()
                                     true
                                 }
-                                android.view.MotionEvent.ACTION_UP,
+                                android.view.MotionEvent.ACTION_UP -> {
+                                    onMicRelease()
+                                    v.performClick()
+                                    true
+                                }
                                 android.view.MotionEvent.ACTION_CANCEL -> {
                                     onMicRelease()
                                     true
@@ -305,8 +314,7 @@ class StreamsActivity : AppCompatActivity(), Layout {
         binding.btnMic.setImageResource(R.drawable.ic_mic)
         binding.micBorderOverlay.visibility = View.VISIBLE
         // Haptic feedback on press
-        val vibrator = getSystemService(Vibrator::class.java)
-        vibrator?.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
+        vibrate(50)
         // Mute playback to prevent feedback
         if (fragments.isNotEmpty()) {
             fragments[0].volume = 0
@@ -348,13 +356,22 @@ class StreamsActivity : AppCompatActivity(), Layout {
         }
     }
 
+    private fun vibrate(millis: Long) {
+        val vibrator = getSystemService(Vibrator::class.java) ?: return
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vibrator.vibrate(VibrationEffect.createOneShot(millis, VibrationEffect.DEFAULT_AMPLITUDE))
+        } else {
+            @Suppress("DEPRECATION")
+            vibrator.vibrate(millis)
+        }
+    }
+
     private fun stopMic() {
         micActive = false
         binding.btnMic.setImageResource(R.drawable.ic_mic_off)
         binding.micBorderOverlay.visibility = View.GONE
         // Haptic feedback on release
-        val vibrator = getSystemService(Vibrator::class.java)
-        vibrator?.vibrate(VibrationEffect.createOneShot(30, VibrationEffect.DEFAULT_AMPLITUDE))
+        vibrate(30)
         // Restore playback audio
         if (fragments.isNotEmpty()) {
             val vol = if (StreamData.getMute() == 0) 100 else 0
@@ -643,7 +660,7 @@ class StreamsActivity : AppCompatActivity(), Layout {
         android.util.Log.d("ONVIF", "togglePTZControls called")
         ptzControlView?.let { ptzView ->
             android.util.Log.d("ONVIF", "PTZ control view exists, current visibility: ${ptzView.visibility}")
-            if (ptzView.visibility == View.VISIBLE) {
+            if (ptzView.isVisible) {
                 ptzView.hide()
                 android.util.Log.d("ONVIF", "Hiding PTZ controls")
             } else {

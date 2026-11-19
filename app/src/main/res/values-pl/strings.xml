@@ -29,11 +29,9 @@
     <string name="err_channels_equal">Adresy kanałów pasują</string>
     <string name="files">Pliki</string>
     <string name="MB">MB</string>
-    <string name="file_prev">Poprzedni plik</string>
-    <string name="file_next">Następny plik</string>
-    <string name="seek_back">Przewiń do tyłu</string>
-    <string name="play_pause">Odtwórz/Pauza</string>
     <string name="mute">Wycisz</string>
+    <string name="mic_toggle">Przełącz mikrofon</string>
+    <string name="mic_permission_denied">Do dwukierunkowego dźwięku wymagane jest uprawnienie do mikrofonu</string>
     <string name="group_add">Dodaj grupę</string>
     <string name="group_name_hint">Nowa grupa</string>
     <string name="group_cams">Kamery *</string>
@@ -42,14 +40,22 @@
         Uwaga! Duża liczba kamer może znacząco obniżyć wydajność urządzenia!
     </string>
     <string name="err_group_exists">Grupa już istnieje</string>
-    <string name="err_group_streams_count">Co najmniej %1$d kamer</string>
+    <plurals name="err_group_streams_count">
+        <item quantity="one">Co najmniej %1$d kamera</item>
+        <item quantity="few">Co najmniej %1$d kamery</item>
+        <item quantity="many">Co najmniej %1$d kamer</item>
+        <item quantity="other">Co najmniej %1$d kamery</item>
+    </plurals>
     <string name="stretch_images">Stretch images (for all groups)</string>
     <string name="show_on_startup">Show on startup</string>
     <string name="export_settings">Eksportuj ustawienia</string>
     <string name="import_settings">Importuj ustawienia</string>
-    <string name="export_password">
-        Hasło do zaszyfrowania pliku (co najmniej %1$d znaków lub pozostaw puste):
-    </string>
+    <plurals name="export_password">
+        <item quantity="one">Hasło do zaszyfrowania pliku (co najmniej %1$d znak lub pozostaw puste):</item>
+        <item quantity="few">Hasło do zaszyfrowania pliku (co najmniej %1$d znaki lub pozostaw puste):</item>
+        <item quantity="many">Hasło do zaszyfrowania pliku (co najmniej %1$d znaków lub pozostaw puste):</item>
+        <item quantity="other">Hasło do zaszyfrowania pliku (co najmniej %1$d znaku lub pozostaw puste):</item>
+    </plurals>
     <string name="export_password_confirm">Potwierdź hasło:</string>
     <string name="import_password">Hasło określone podczas eksportu:</string>
     <string name="btn_continue">Kontynuować</string>
@@ -74,4 +80,10 @@
     <string name="log_cons_hint">
        (Niezalecane ze względów bezpieczeństwa. Obowiązuje do zamknięcia aplikacji.)
     </string>
+    <string name="onvif_discover">Wykryj kamery ONVIF</string>
+    <string name="onvif_config">Konfiguracja ONVIF</string>
+    <string name="onvif_url_hint">Adres URL ONVIF (np. onvif://username:password@192.168.1.100:80/onvif/device_service)</string>
+    <string name="ptz_invert_horizontal">Odwróć PTZ w poziomie</string>
+    <string name="ptz_invert_vertical">Odwróć PTZ w pionie</string>
+    <string name="ptz_rate_limit">"Limit częstotliwości PTZ (ms): "</string>
 </resources>

@@ -29,11 +29,9 @@
     <string name="err_channels_equal">Адреса каналов совпадают</string>
     <string name="files">Архив</string>
     <string name="MB">МБ</string>
-    <string name="file_prev">Предыдущий файл</string>
-    <string name="file_next">Следующий файл</string>
-    <string name="seek_back">Перемотка назад</string>
-    <string name="play_pause">Пуск/пауза</string>
     <string name="mute">Тишина</string>
+    <string name="mic_toggle">Переключить микрофон</string>
+    <string name="mic_permission_denied">Для двусторонней связи требуется доступ к микрофону</string>
     <string name="group_add">Добавить группу</string>
     <string name="group_name_hint">Новая группа</string>
     <string name="group_cams">Камеры *</string>
@@ -42,14 +40,22 @@
         Внимание! Большое количество камер может существенно снизить производительность устройства!
     </string>
     <string name="err_group_exists">Такая группа уже существует</string>
-    <string name="err_group_streams_count">Не менее %1$d камер</string>
+    <plurals name="err_group_streams_count">
+        <item quantity="one">Не менее %1$d камеры</item>
+        <item quantity="few">Не менее %1$d камер</item>
+        <item quantity="many">Не менее %1$d камер</item>
+        <item quantity="other">Не менее %1$d камеры</item>
+    </plurals>
     <string name="stretch_images">Растягивать кадры (для всех групп)</string>
     <string name="show_on_startup">Показывать при запуске</string>
     <string name="export_settings">Экспорт настроек</string>
     <string name="import_settings">Импорт настроек</string>
-    <string name="export_password">
-        Пароль для шифрования файла (не менее %1$d символов или оставьте поле пустым)
-    </string>
+    <plurals name="export_password">
+        <item quantity="one">Пароль для шифрования файла (не менее %1$d символа или оставьте поле пустым)</item>
+        <item quantity="few">Пароль для шифрования файла (не менее %1$d символов или оставьте поле пустым)</item>
+        <item quantity="many">Пароль для шифрования файла (не менее %1$d символов или оставьте поле пустым)</item>
+        <item quantity="other">Пароль для шифрования файла (не менее %1$d символа или оставьте поле пустым)</item>
+    </plurals>
     <string name="export_password_confirm">Проверка пароля:</string>
     <string name="import_password">Пароль, указанный при экспорте:</string>
     <string name="btn_continue">Продолжить</string>
@@ -74,4 +80,10 @@
     <string name="log_cons_hint">
         (Не рекомендуется по соображениям безопасности. Действует до закрытия приложения.)
     </string>
+    <string name="onvif_discover">Найти камеры ONVIF</string>
+    <string name="onvif_config">Настройки ONVIF</string>
+    <string name="onvif_url_hint">URL ONVIF (например, onvif://username:password@192.168.1.100:80/onvif/device_service)</string>
+    <string name="ptz_invert_horizontal">Инвертировать PTZ по горизонтали</string>
+    <string name="ptz_invert_vertical">Инвертировать PTZ по вертикали</string>
+    <string name="ptz_rate_limit">"Ограничение частоты PTZ (мс): "</string>
 </resources>

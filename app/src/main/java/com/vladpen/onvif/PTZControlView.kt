@@ -130,13 +130,23 @@ class PTZControlView @JvmOverloads constructor(
                 return true
             }
             
-            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+            MotionEvent.ACTION_UP -> {
+                stopAllMovement()
+                performClick()
+                return true
+            }
+
+            MotionEvent.ACTION_CANCEL -> {
                 stopAllMovement()
                 return true
             }
         }
         
         return super.onTouchEvent(event)
+    }
+
+    override fun performClick(): Boolean {
+        return super.performClick()
     }
 
     private fun getTouchedDirection(x: Float, y: Float): PTZDirection? {
