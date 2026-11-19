@@ -80,6 +80,16 @@ class StreamsActivity : AppCompatActivity(), Layout {
             }
         }
         
+        // Streams started before local network access was granted have already failed, so restart them
+        val localNetworkLauncher = registerForActivityResult(
+            androidx.activity.result.contract.ActivityResultContracts.RequestPermission()
+        ) { granted ->
+            if (granted)
+                recreate()
+        }
+        if (com.vladpen.LocalNetwork.needsPermission(this))
+            localNetworkLauncher.launch(com.vladpen.LocalNetwork.PERMISSION)
+
         // Lock to landscape orientation for better video viewing
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         

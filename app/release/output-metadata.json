@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.vladpen.cams",
+  "applicationId": "com.odiousapps.onvifcamera",
   "variantName": "release",
   "elements": [
     {
@@ -16,35 +16,9 @@
         }
       ],
       "attributes": [],
-      "versionCode": 1010132,
-      "versionName": "2.4.4",
+      "versionCode": 10101373,
+      "versionName": "2.5.1",
       "outputFile": "cams-armeabi-v7a-release.apk"
-    },
-    {
-      "type": "ONE_OF_MANY",
-      "filters": [
-        {
-          "filterType": "ABI",
-          "value": "x86"
-        }
-      ],
-      "attributes": [],
-      "versionCode": 1010132,
-      "versionName": "2.4.4",
-      "outputFile": "cams-x86-release.apk"
-    },
-    {
-      "type": "ONE_OF_MANY",
-      "filters": [
-        {
-          "filterType": "ABI",
-          "value": "arm64-v8a"
-        }
-      ],
-      "attributes": [],
-      "versionCode": 1010132,
-      "versionName": "2.4.4",
-      "outputFile": "cams-arm64-v8a-release.apk"
     },
     {
       "type": "ONE_OF_MANY",
@@ -55,9 +29,35 @@
         }
       ],
       "attributes": [],
-      "versionCode": 1010132,
-      "versionName": "2.4.4",
+      "versionCode": 10101376,
+      "versionName": "2.5.1",
       "outputFile": "cams-x86_64-release.apk"
+    },
+    {
+      "type": "ONE_OF_MANY",
+      "filters": [
+        {
+          "filterType": "ABI",
+          "value": "arm64-v8a"
+        }
+      ],
+      "attributes": [],
+      "versionCode": 10101374,
+      "versionName": "2.5.1",
+      "outputFile": "cams-arm64-v8a-release.apk"
+    },
+    {
+      "type": "ONE_OF_MANY",
+      "filters": [
+        {
+          "filterType": "ABI",
+          "value": "x86"
+        }
+      ],
+      "attributes": [],
+      "versionCode": 10101375,
+      "versionName": "2.5.1",
+      "outputFile": "cams-x86-release.apk"
     }
   ],
   "elementType": "File",
@@ -67,9 +67,9 @@
       "maxApi": 30,
       "baselineProfiles": [
         "baselineProfiles/1/cams-armeabi-v7a-release.dm",
-        "baselineProfiles/1/cams-x86-release.dm",
+        "baselineProfiles/1/cams-x86_64-release.dm",
         "baselineProfiles/1/cams-arm64-v8a-release.dm",
-        "baselineProfiles/1/cams-x86_64-release.dm"
+        "baselineProfiles/1/cams-x86-release.dm"
       ]
     },
     {
@@ -77,9 +77,9 @@
       "maxApi": 2147483647,
       "baselineProfiles": [
         "baselineProfiles/0/cams-armeabi-v7a-release.dm",
-        "baselineProfiles/0/cams-x86-release.dm",
+        "baselineProfiles/0/cams-x86_64-release.dm",
         "baselineProfiles/0/cams-arm64-v8a-release.dm",
-        "baselineProfiles/0/cams-x86_64-release.dm"
+        "baselineProfiles/0/cams-x86-release.dm"
       ]
     }
   ],

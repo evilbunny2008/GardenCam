@@ -23,3 +23,27 @@
 # ONVIF library rules
 -keep class org.apache.http.** { *; }
 -dontwarn org.apache.http.**
+# Keep line numbers so release crash stack traces stay readable
+-keepattributes SourceFile,LineNumberTable
+
+# libVLC: native code calls back into Java by name, and the AAR ships no rules
+-keep class org.videolan.libvlc.** { *; }
+-keep class org.videolan.medialibrary.** { *; }
+
+# JSch: algorithms are loaded by class name from its config
+-keep class com.jcraft.jsch.** { *; }
+-dontwarn com.jcraft.jsch.**
+-dontwarn org.bouncycastle.**
+-dontwarn org.newsclub.net.unix.**
+-dontwarn com.sun.jna.**
+-dontwarn org.slf4j.**
+-dontwarn org.apache.logging.log4j.**
+
+# Gson: models saved to and loaded from settings JSON must keep their field names
+-keep class com.vladpen.StreamDataModel { <fields>; <init>(...); }
+-keep class com.vladpen.GroupDataModel { <fields>; <init>(...); }
+-keep class com.vladpen.SourceDataModel { <fields>; <init>(...); }
+-keep class com.vladpen.onvif.DeviceCapabilities { <fields>; <init>(...); }
+-keep class com.vladpen.onvif.PTZCapabilities { <fields>; <init>(...); }
+-keep class com.vladpen.onvif.EventCapabilities { <fields>; <init>(...); }
+-keep class com.vladpen.onvif.PTZPreset { <fields>; <init>(...); }

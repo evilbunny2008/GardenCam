@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vladpen.Alert
 import com.vladpen.Effects.edgeToEdge
 import com.vladpen.GroupData
+import com.vladpen.LocalNetwork
 import com.vladpen.Settings
 import com.vladpen.SourceAdapter
 import com.vladpen.SourceData
@@ -35,10 +36,12 @@ class MainActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (redirect())
-            return
+            return // StreamsActivity requests local network access itself
         setContentView(binding.root)
         edgeToEdge(binding.root)
         initActivity()
+        if (LocalNetwork.needsPermission(this))
+            requestPermissions(arrayOf(LocalNetwork.PERMISSION), 0)
     }
 
     private fun initActivity() {
