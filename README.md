@@ -2,7 +2,7 @@
 
 > **Note**: This is a fork of the [original cams repository](https://github.com/vladpen/cams) with enhanced ONVIF features including automatic stream discovery and touch-based PTZ control.
 
-**Package ID**: `uk.org.retallack.onvifcamera`  
+**Package ID**: `com.odiousapps.onvifcamera`  
 **Original Package**: `com.vladpen.cams`
 
 This fork can be installed alongside the original Cams app without conflicts.
@@ -64,7 +64,7 @@ Data is not sent to any servers, including Google's technical infrastructure and
 
 ## Installation
 
-APK file can be built yourself, [downloaded from Github](https://github.com/vladpen/cams/raw/main/app/release/app-armeabi-v7a-release.apk),
+APK file can be built yourself, [downloaded from GitHub](https://github.com/vladpen/cams/raw/main/app/release/app-armeabi-v7a-release.apk),
 installed using [F-Droid](https://f-droid.org/ru/packages/com.vladpen.cams/) (32-bit platforms only)
 or [RuStore](https://www.rustore.ru/catalog/app/com.vladpen.cams).
 Supports armeabi-v7a architecture (used in most modern mobile phones), arm64-v8a, x86-64 and x86.
@@ -221,7 +221,7 @@ Detailed discussion of the application: [habr.com/ru/post/654915](https://habr.c
 and server: [habr.com/ru/post/597363](https://habr.com/ru/post/597363/).
 
 [<img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
-alt="Get it on Github"
+alt="Get it on GitHub"
 height="80">](https://github.com/vladpen/cams/tree/main/app/release)
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
 alt="Get it on F-Droid"
@@ -242,23 +242,23 @@ The project uses GitHub Actions (`.github/workflows/android-ci.yml`) for continu
 
 ### Jobs
 
-| Job | Trigger | Description |
-|-----|---------|-------------|
-| build | push/PR | Assembles debug APKs, uploads as artifacts |
-| lint | push/PR | Runs Android lint (non-blocking) |
-| test | push/PR | Runs unit tests |
+| Job     | Trigger        | Description                                                                                |
+|---------|----------------|--------------------------------------------------------------------------------------------|
+| build   | push/PR        | Assembles debug APKs, uploads as artifacts                                                 |
+| lint    | push/PR        | Runs Android lint (non-blocking)                                                           |
+| test    | push/PR        | Runs unit tests                                                                            |
 | release | GitHub Release | Builds signed release APKs, attaches to release, distributes arm64 APK to Firebase testers |
 
 ### GitHub Secrets Required
 
-| Secret | Description |
-|--------|-------------|
-| `KEYSTORE_BASE64` | Release keystore, base64-encoded (`base64 -w 0 release.keystore`) |
-| `KEYSTORE_PASSWORD` | Keystore password |
-| `KEY_ALIAS` | Key alias (e.g. `cams`) |
-| `KEY_PASSWORD` | Key password |
-| `FIREBASE_APP_ID` | Firebase App ID (from Firebase Console → Project Settings → Your Apps) |
-| `FIREBASE_SERVICE_ACCOUNT` | Firebase service account JSON with App Distribution Admin role |
+| Secret                     | Description                                                            |
+|----------------------------|------------------------------------------------------------------------|
+| `KEYSTORE_BASE64`          | Release keystore, base64-encoded (`base64 -w 0 release.keystore`)      |
+| `KEYSTORE_PASSWORD`        | Keystore password                                                      |
+| `KEY_ALIAS`                | Key alias (e.g. `cams`)                                                |
+| `KEY_PASSWORD`             | Key password                                                           |
+| `FIREBASE_APP_ID`          | Firebase App ID (from Firebase Console → Project Settings → Your Apps) |
+| `FIREBASE_SERVICE_ACCOUNT` | Firebase service account JSON with App Distribution Admin role         |
 
 ### Signing Configuration
 
@@ -353,7 +353,7 @@ Signed arm64-v8a APKs are distributed to the `testers` group in Firebase App Dis
    git rebase upstream/master
    ```
 
-4. Update `metadata/uk.org.retallack.onvifcamera.yml`:
+4. Update `metadata/com.odiousapps.onvifcamera.yml`:
    - Add four new build entries (one per architecture: armeabi-v7a, arm64-v8a, x86, x86_64)
    - Version codes: base-3, base-2, base-1, base (e.g., 10101347, 10101348, 10101349, 10101350)
    - Update `CurrentVersion` and `CurrentVersionCode` at bottom
@@ -361,7 +361,7 @@ Signed arm64-v8a APKs are distributed to the `testers` group in Firebase App Dis
 
 5. Commit and push:
    ```bash
-   git add metadata/uk.org.retallack.onvifcamera.yml
+   git add metadata/com.odiousapps.onvifcamera.yml
    git commit -m "Update ONVIF Camera to vX.Y.Z - Brief description"
    git push origin add-onvifcamera-v2 --force-with-lease
    ```
@@ -388,7 +388,7 @@ Example for v2.4.9:
 - x86: 10101355
 - x86_64: 10101356
 
-*Copyright (c) 2022-2025 vladpen under MIT license. Use it with absolutely no warranty.*
+*Copyright © 2022-2025 vladpen under MIT license. Use it with absolutely no warranty.*
 
 
 ## TODO / Configuration

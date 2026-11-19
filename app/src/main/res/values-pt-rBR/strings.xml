@@ -1,3 +1,4 @@
+<!--suppress GrazieStyle -->
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" tools:ignore="Typos">ONVIF Camera</string>
     <string name="main_title">Câmeras</string>

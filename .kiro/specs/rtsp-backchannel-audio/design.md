@@ -2,7 +2,7 @@
 
 ## Architecture Overview
 
-The backchannel audio feature operates independently from VLC playback. It uses a separate RTSP TCP connection to negotiate and send audio to the camera.
+The backchannel audio feature operates independently of VLC playback. It uses a separate RTSP TCP connection to negotiate and send audio to the camera.
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -155,13 +155,13 @@ a=sendonly                  ← this marks it as backchannel
 
 ## Error Handling
 
-| Scenario | Behaviour |
-|----------|-----------|
-| Camera doesn't support backchannel | Hide mic button (no sendonly track in SDP) |
-| RTSP auth fails | Log error, hide mic button |
-| Connection drops during talk | Stop audio capture, show brief toast |
-| Permission denied | Show snackbar explaining requirement |
-| Camera speaker disabled | No sendonly tracks appear (already handled) |
+| Scenario                           | Behaviour                                   |
+|------------------------------------|---------------------------------------------|
+| Camera doesn't support backchannel | Hide mic button (no sendonly track in SDP)  |
+| RTSP auth fails                    | Log error, hide mic button                  |
+| Connection drops during talk       | Stop audio capture, show brief toast        |
+| Permission denied                  | Show snackbar explaining requirement        |
+| Camera speaker disabled            | No sendonly tracks appear (already handled) |
 
 ## Threading Model
 
@@ -185,19 +185,19 @@ The AudioRecord callback runs on its own thread. Encoding (G.711 lookup) is triv
 
 Location: `app/src/test/java/com/vladpen/` (same as existing tests, runs in CI via `testDebugUnitTest`)
 
-| Test Class | Coverage |
-|-----------|----------|
-| `G711EncoderTest` | All μ-law/A-law encoding: zero, max positive, max negative, known reference values, symmetry |
-| `BackchannelClientTest` | SDP parsing (find sendonly tracks, extract codec/control), Digest auth computation, RTP packet construction, TCP interleaved framing, RTSP message formatting |
-| `BackchannelManagerTest` | State machine (idle→connecting→active→stopping→idle), start/stop lifecycle, auto-stop on repeated start, error state transitions |
-| `RtpPacketTest` | Header construction, sequence number wrap-around, timestamp increment, SSRC, payload type mapping |
+| Test Class               | Coverage                                                                                                                                                      |
+|--------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `G711EncoderTest`        | All μ-law/A-law encoding: zero, max positive, max negative, known reference values, symmetry                                                                  |
+| `BackchannelClientTest`  | SDP parsing (find sendonly tracks, extract codec/control), Digest auth computation, RTP packet construction, TCP interleaved framing, RTSP message formatting |
+| `BackchannelManagerTest` | State machine (idle→connecting→active→stopping→idle), start/stop lifecycle, auto-stop on repeated start, error state transitions                              |
+| `RtpPacketTest`          | Header construction, sequence number wrap-around, timestamp increment, SSRC, payload type mapping                                                             |
 
 ### Integration Tests
 
 Location: `app/src/androidTest/java/com/vladpen/cams/`
 
-| Test | What it verifies |
-|------|-----------------|
+| Test                         | What it verifies                                                                                |
+|------------------------------|-------------------------------------------------------------------------------------------------|
 | `BackchannelIntegrationTest` | Full RTSP handshake against a mock RTSP server (loopback), audio data arrives correctly encoded |
 
 ### Test Execution

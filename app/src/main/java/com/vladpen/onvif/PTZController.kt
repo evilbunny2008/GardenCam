@@ -9,11 +9,14 @@ class PTZController(
     companion object {
         private const val PTZ_NAMESPACE = "http://www.onvif.org/ver20/ptz/wsdl"
         private const val MEDIA_NAMESPACE = "http://www.onvif.org/ver10/media/wsdl"
+        private const val SCHEMA_NAMESPACE = "http://www.onvif.org/ver10/schema"
     }
 
     private var profileToken: String? = null
     private var mediaServiceUrl: String? = null
     private var ptzServiceUrl: String? = null
+    // null = not yet probed, true = ContinuousMove works, false = use RelativeMove
+    @Volatile private var supportsContinuousMove: Boolean? = null
 
     suspend fun initialize(): Boolean = withContext(Dispatchers.IO) {
         android.util.Log.d("PTZ_CONTROLLER", "Initializing PTZ for $serviceUrl")
@@ -134,15 +137,64 @@ class PTZController(
         }
         
         val ptzSoapClient = ONVIFSoapClient(ptzUrl, credentials)
-        
-        // Use RelativeMove instead of ContinuousMove (Thingino cameras don't support ContinuousMove)
+
+        // Prefer ContinuousMove; fall back to RelativeMove for cameras that reject it (e.g. Thingino)
+        if (supportsContinuousMove != false) {
+            val response = sendContinuousMove(ptzSoapClient, token, direction, speed)
+            if (response != null && !response.isFault()) {
+                supportsContinuousMove = true
+                return@withContext true
+            }
+            if (supportsContinuousMove == true) {
+                return@withContext false
+            }
+            android.util.Log.w("PTZ_CONTROLLER", "ContinuousMove failed, falling back to RelativeMove")
+        }
+
+        val response = sendRelativeMove(ptzSoapClient, token, direction, speed)
+        val success = response != null && !response.isFault()
+        if (success) {
+            supportsContinuousMove = false
+        }
+        return@withContext success
+    }
+
+    private fun sendContinuousMove(
+        client: ONVIFSoapClient,
+        token: String,
+        direction: PTZDirection,
+        speed: Float
+    ): ONVIFResponse? {
+        val (panVelocity, tiltVelocity) = when (direction) {
+            PTZDirection.LEFT -> Pair(-speed, 0f)
+            PTZDirection.RIGHT -> Pair(speed, 0f)
+            PTZDirection.UP -> Pair(0f, speed)
+            PTZDirection.DOWN -> Pair(0f, -speed)
+        }
+
+        val moveParams = mapOf(
+            "ProfileToken" to token,
+            "Velocity" to """
+                <PanTilt xmlns="$SCHEMA_NAMESPACE" x="$panVelocity" y="$tiltVelocity"/>
+            """.trimIndent()
+        )
+
+        return client.sendRequest("ContinuousMove", PTZ_NAMESPACE, moveParams)
+    }
+
+    private fun sendRelativeMove(
+        client: ONVIFSoapClient,
+        token: String,
+        direction: PTZDirection,
+        speed: Float
+    ): ONVIFResponse? {
         val (panDistance, tiltDistance) = when (direction) {
             PTZDirection.LEFT -> Pair(-3.0f, 0f)
             PTZDirection.RIGHT -> Pair(3.0f, 0f)
             PTZDirection.UP -> Pair(0f, 3.0f)
             PTZDirection.DOWN -> Pair(0f, -3.0f)
         }
-        
+
         val moveParams = mapOf(
             "ProfileToken" to token,
             "Translation" to """
@@ -154,9 +206,8 @@ class PTZController(
                 <Zoom x="$speed"/>
             """.trimIndent()
         )
-        
-        val response = ptzSoapClient.sendRequest("RelativeMove", PTZ_NAMESPACE, moveParams)
-        return@withContext response != null
+
+        return client.sendRequest("RelativeMove", PTZ_NAMESPACE, moveParams)
     }
 
     suspend fun stop(): Boolean = withContext(Dispatchers.IO) {

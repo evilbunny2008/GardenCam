@@ -156,6 +156,14 @@ class ONVIFSoapClient(
 }
 
 class ONVIFResponse(private val document: Document) {
+    fun isFault(): Boolean {
+        val elements = document.getElementsByTagName("*")
+        for (i in 0 until elements.length) {
+            if (elements.item(i).nodeName.substringAfter(':') == "Fault") return true
+        }
+        return false
+    }
+
     fun getProperty(name: String): String? {
         return try {
             val elements = document.getElementsByTagName(name)

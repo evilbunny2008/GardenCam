@@ -7,11 +7,11 @@ android {
     compileSdk = 37
 
     defaultConfig {
-        applicationId 'uk.org.retallack.onvifcamera'
+        applicationId 'com.odiousapps.onvifcamera'
         minSdk 24
         targetSdk 37
-        versionCode 10101370
-        versionName '2.5.0'
+        versionCode 10101376
+        versionName '2.5.1'
         base.archivesName = 'cams'
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }

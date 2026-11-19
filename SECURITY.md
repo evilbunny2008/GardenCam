@@ -14,10 +14,10 @@ ONVIF Camera (fork of Cams) is designed with security and privacy as core princi
 
 ## Supported Versions
 
-| Version | Supported          | Status |
-| ------- | ------------------ | ------ |
-| 2.4.5   | :white_check_mark: | Current release |
-| 2.4.4   | :x:                | Superseded |
+| Version | Supported          | Status              |
+|---------|--------------------|---------------------|
+| 2.4.5   | :white_check_mark: | Current release     |
+| 2.4.4   | :x:                | Superseded          |
 | < 2.4.4 | :x:                | No longer supported |
 
 ## Third-Party Dependencies
@@ -216,8 +216,8 @@ All dependencies use permissive open-source licenses (MIT, Apache 2.0, BSD, LGPL
 
 ## Security Audit History
 
-| Date | Auditor | Scope | Findings | Status |
-|------|---------|-------|----------|--------|
+| Date       | Auditor  | Scope             | Findings                                  | Status     |
+|------------|----------|-------------------|-------------------------------------------|------------|
 | 2026-01-24 | Internal | Dependency review | HttpClient deprecated, all others current | Documented |
 
 ## References
