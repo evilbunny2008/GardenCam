@@ -40,7 +40,7 @@ class MainActivity: AppCompatActivity() {
         setContentView(binding.root)
         edgeToEdge(binding.root)
         initActivity()
-        if (LocalNetwork.needsPermission(this))
+        if (LocalNetwork.needsPermission(this, StreamData.getAll().flatMap { LocalNetwork.urlsOf(it) }))
             requestPermissions(arrayOf(LocalNetwork.PERMISSION), 0)
     }
 

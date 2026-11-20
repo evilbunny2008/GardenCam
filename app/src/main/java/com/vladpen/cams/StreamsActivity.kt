@@ -61,6 +61,7 @@ class StreamsActivity : AppCompatActivity(), Layout {
     private var backchannelManager: BackchannelManager? = null
     private var micActive = false
     private lateinit var micPermissionLauncher: androidx.activity.result.ActivityResultLauncher<String>
+    private lateinit var localNetworkLauncher: androidx.activity.result.ActivityResultLauncher<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,15 +82,12 @@ class StreamsActivity : AppCompatActivity(), Layout {
         }
         
         // Streams started before local network access was granted have already failed, so restart them
-        val localNetworkLauncher = registerForActivityResult(
+        localNetworkLauncher = registerForActivityResult(
             androidx.activity.result.contract.ActivityResultContracts.RequestPermission()
         ) { granted ->
             if (granted)
                 recreate()
         }
-        if (com.vladpen.LocalNetwork.needsPermission(this))
-            localNetworkLauncher.launch(com.vladpen.LocalNetwork.PERMISSION)
-
         // Lock to landscape orientation for better video viewing
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         
@@ -113,6 +111,9 @@ class StreamsActivity : AppCompatActivity(), Layout {
 
         try { // prevents exception if settings file is corrupted
             initActivity(sourceType)
+            val urls = streams.mapNotNull { StreamData.getById(it) }.flatMap { com.vladpen.LocalNetwork.urlsOf(it) }
+            if (com.vladpen.LocalNetwork.needsPermission(this, urls))
+                localNetworkLauncher.launch(com.vladpen.LocalNetwork.PERMISSION)
             if (savedInstanceState == null) {
                 initFragments()
             }

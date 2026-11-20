@@ -10,8 +10,8 @@ android {
         applicationId 'com.odiousapps.onvifcamera'
         minSdk 24
         targetSdk 37
-        versionCode 10101382
-        versionName '2.5.2'
+        versionCode 10101388
+        versionName '2.5.3'
         base.archivesName = 'cams'
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }

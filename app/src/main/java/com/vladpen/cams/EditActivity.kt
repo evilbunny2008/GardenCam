@@ -27,6 +27,16 @@ class EditActivity : AppCompatActivity() {
     private var streamId: Int = -1
     private val streams by lazy { StreamData.getAll() }
 
+    // Discovery waits for the local network prompt, then runs whether or not access was granted
+    private var localNetworkAsked = false
+    private var localNetworkAction: (() -> Unit)? = null
+    private val localNetworkLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.RequestPermission()
+    ) {
+        localNetworkAction?.invoke()
+        localNetworkAction = null
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -300,7 +310,23 @@ class EditActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    // Runs action now, or after the local network prompt if a LAN address is involved
+    private fun withLocalNetwork(needed: Boolean, action: () -> Unit) {
+        if (!needed || localNetworkAsked) {
+            action()
+            return
+        }
+        localNetworkAsked = true
+        localNetworkAction = action
+        localNetworkLauncher.launch(LocalNetwork.PERMISSION)
+    }
+
     private fun discoverOnvifDevices() {
+        // Scanning always targets the LAN
+        withLocalNetwork(LocalNetwork.needsPermission(this)) { scanOnvifDevices() }
+    }
+
+    private fun scanOnvifDevices() {
         val progressDialog = AlertDialog.Builder(this)
             .setTitle("Discovering ONVIF Cameras")
             .setMessage("Scanning network for ONVIF devices...")
@@ -435,6 +461,12 @@ class EditActivity : AppCompatActivity() {
     }
     
     private fun discoverStreamsFromOnvif(onvifUrl: String) {
+        withLocalNetwork(LocalNetwork.needsPermission(this, listOf(onvifUrl))) {
+            fetchStreamsFromOnvif(onvifUrl)
+        }
+    }
+
+    private fun fetchStreamsFromOnvif(onvifUrl: String) {
         Log.d("ONVIF", "EditActivity: Starting discovery for URL: $onvifUrl")
         lifecycleScope.launch {
             try {
