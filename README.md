@@ -68,19 +68,22 @@ width="200">
 The application is written for joint use with the [python-rtsp-server](https://github.com/vladpen/python-rtsp-server) server,
 but works perfectly standalone thanks to the ability to connect to any IP cameras, as well as video recorders that support SFTP.
 
-Plays most types of video streams (not just RTSP).
+Plays RTSP and plain HTTP video streams from IP cameras (H.264, H.265 and MJPEG).
 The screenshot above shows an image from a real video camera and three test videos in "Group" mode.
 
 ### Video Playback Technology
 
 The app uses **VLC for Android (libvlc)** as its video playback engine, providing:
-- Support for RTSP, RTMP, HTTP, and other streaming protocols
-- Hardware-accelerated H.264, H.265/HEVC video decoding
+- RTSP (over TCP or UDP), RTP and plain HTTP streams
+- Hardware-accelerated H.264 and H.265/HEVC decoding, with software fallback; MJPEG and still images
+- G.711, G.726 and AAC camera audio
 - Low-latency streaming optimized for IP cameras
-- Robust network error handling and reconnection
-- Multi-format codec support
 
-VLC library is obtained from Maven Central: `org.videolan.android:libvlc-all:3.7.7`  
+Garden Cam ships a stripped-down build of libvlc 3.7.7 (`app/libs/libvlc.aar`, arm64-v8a only)
+rather than `libvlc-all` from Maven Central, which cuts the native libraries from 55.3 MB to
+11.6 MB. It does not support TLS (`https://`, `rtsps://`), RTMP, subtitles or most container
+formats and codecs. See [libvlc/README.md](libvlc/README.md) for what is included and how to
+rebuild it.  
 License: LGPL 2.1+ / GPL 2.0+ - See [VideoLAN Legal](https://www.videolan.org/legal.html)
 
 *IMPORTANT. The application is focused on security and data privacy, so it does not collect or process any user information.
@@ -94,8 +97,8 @@ Build the APK yourself:
 ./gradlew assembleRelease
 ```
 
-APKs are written to `app/build/outputs/apk/release/` for armeabi-v7a, arm64-v8a, x86 and x86_64
-(`gardencam-<abi>-release-unsigned.apk`). The build has no signing configuration, so sign the APK
+The APK is written to `app/build/outputs/apk/release/gardencam-arm64-v8a-release-unsigned.apk`.
+Only arm64-v8a is built; 32-bit and x86 devices are not supported. The build has no signing configuration, so sign the APK
 before installing it:
 
 ```bash
@@ -277,15 +280,15 @@ and server: [habr.com/ru/post/597363](https://habr.com/ru/post/597363/).
 ## Version Codes
 
 Garden Cam restarted its versioning at `versionName` 0.0.1, `versionCode` 1.
-Increase `versionCode` by 1 for each release; the build turns it into one code per APK:
+Increase `versionCode` by 1 for each release; the build turns it into one code per output:
 
-| Output                 | versionCode            | Example for versionCode 1 |
+| Output                 | versionCode            | Example for versionCode 2 |
 |------------------------|------------------------|---------------------------|
-| App Bundle (no splits) | versionCode × 10       | 10                        |
-| armeabi-v7a            | versionCode × 10 + 1   | 11                        |
-| arm64-v8a              | versionCode × 10 + 2   | 12                        |
-| x86                    | versionCode × 10 + 3   | 13                        |
-| x86_64                 | versionCode × 10 + 4   | 14                        |
+| App Bundle (no splits) | versionCode × 10       | 20                        |
+| arm64-v8a APK          | versionCode × 10 + 2   | 22                        |
+
+Version 0.0.1 (versionCode 1) also had armeabi-v7a (+1), x86 (+3) and x86_64 (+4) APKs. Those
+digits stay reserved, so codes never clash if an ABI is added back.
 
 Release notes go in `fastlane/metadata/android/en-US/changelogs/<code>.txt`, one file for each of
 these codes (500 characters at most).

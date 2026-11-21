@@ -43,8 +43,11 @@ This application uses the following open-source libraries:
 - **androidx.activity:activity-ktx** - Apache License 2.0
 
 ### Media & Networking
-- **VLC for Android (libvlc-all)** - LGPL 2.1 or later / GPL 2.0 or later
+- **libvlc (custom build of VLC for Android 3.7.7)** - LGPL 2.1 or later / GPL 2.0 or later
   - https://www.videolan.org/legal.html
+  - Modified: the build is stripped down to the features Garden Cam uses. The changes and build
+    script are in [libvlc/](libvlc/README.md), and the upstream source is at
+    https://code.videolan.org/videolan/vlc-android (tag `libvlc-3.7.7`)
 - **Gson** - Apache License 2.0
   - https://github.com/google/gson
 - **JSch** - BSD-style license

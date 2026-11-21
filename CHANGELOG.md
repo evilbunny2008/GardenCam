@@ -1,3 +1,18 @@
+## 0.0.2 - unreleased
+
+### Platform and build
+- Only arm64-v8a is built now; armeabi-v7a, x86 and x86_64 are no longer supported. Devices with a
+  32-bit Android system, including many Android TV boxes, can no longer install the app.
+- libVLC is now a custom, stripped-down 3.7.7 build (`app/libs/libvlc.aar`) instead of `libvlc-all`
+  from Maven Central. It keeps RTSP, RTP, plain HTTP, MPEG-TS/PS, MP4, H.264/H.265, MJPEG, still
+  images and G.711/G.726/AAC audio, and drops everything else, including TLS (`https://` and
+  `rtsps://` streams), RTMP and subtitles. Native libraries shrink from 55.3 MB to 11.6 MB and the
+  release APK to about 7 MB. The patches and build script are in `libvlc/`.
+- `ndkVersion` is set so native libraries are stripped of debug symbols when packaged
+  (`libc++_shared.so`: 9.3 MB to 1.4 MB).
+- Fullscreen stream view uses `WindowInsetsControllerCompat` instead of the deprecated
+  `systemUiVisibility` flags.
+
 ## 0.0.1 - unreleased (Garden Cam fork)
 
 Versioning restarted at 0.0.1 (versionCode 1) for the fork.

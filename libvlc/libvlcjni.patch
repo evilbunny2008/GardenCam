@@ -1,0 +1,349 @@
+diff --git a/buildsystem/compile-libvlc.sh b/buildsystem/compile-libvlc.sh
+index b67c1e6..9acde14 100755
+--- a/buildsystem/compile-libvlc.sh
++++ b/buildsystem/compile-libvlc.sh
+@@ -289,47 +289,30 @@ avlc_build()
+ ###########################
+ 
+ VLC_CONTRIB_ARGS="\
+-    --disable-a52 \
+-    --disable-dca \
+-    --disable-goom \
+-    --disable-chromaprint \
+-    --enable-lua \
+-    --disable-sdl \
+-    --disable-SDL_image \
+-    --enable-zvbi \
+-    --disable-kate \
+-    --disable-caca \
+-    --disable-mpcdec \
+-    --enable-upnp \
+-    --enable-gme \
+-    --disable-tremor \
+-    --enable-vorbis \
+-    --disable-sidplay2 \
+-    --disable-samplerate \
+-    --disable-faad2 \
+-    --enable-harfbuzz \
+-    --enable-iconv \
+-    --disable-aribb24 \
+-    --disable-aribb25 \
+-    --enable-mpg123 \
+-    --enable-libdsm \
+-    --enable-smb2 \
+-    --enable-libarchive \
+-    --disable-libmpeg2 \
+-    --enable-soxr \
+-    --enable-nfs \
+-    --enable-microdns \
+-    --enable-fluidlite \
+-    --disable-mad \
+-    --disable-vncclient \
+-    --disable-vnc \
+-    --enable-jpeg \
+-    --enable-libplacebo \
++    --disable-disc \
++    --disable-sout \
+     --enable-ad-clauses \
+-    --disable-srt \
+-    --enable-vpx \
+-    --disable-x265 \
+-    --disable-medialibrary \
++    --disable-a52 --disable-dca --disable-goom --disable-chromaprint \
++    --disable-lua --disable-sdl --disable-SDL_image --disable-zvbi \
++    --disable-kate --disable-caca --disable-mpcdec --disable-upnp \
++    --disable-gme --disable-tremor --disable-vorbis --disable-ogg \
++    --disable-sidplay2 --disable-samplerate --disable-faad2 \
++    --disable-harfbuzz --disable-freetype2 --disable-fribidi \
++    --disable-fontconfig --disable-ass --enable-iconv \
++    --disable-aribb24 --disable-aribb25 --disable-mpg123 \
++    --disable-libdsm --disable-smb2 --disable-nfs --disable-microdns \
++    --disable-libarchive --disable-libmpeg2 --enable-soxr \
++    --disable-fluidlite --disable-mad --disable-vncclient --disable-vnc \
++    --disable-jpeg --disable-libplacebo --disable-srt \
++    --disable-vpx --disable-aom --disable-dav1d --disable-x264 --disable-x265 \
++    --disable-medialibrary --disable-bluray --disable-dvdread \
++    --disable-dvdnav --disable-dvdcss --disable-cddb \
++    --disable-taglib --disable-matroska --disable-ebml --disable-modplug \
++    --disable-mysofa --disable-spatialaudio --disable-theora \
++    --disable-speex --disable-flac --disable-opus --disable-libxml2 \
++    --disable-ssh2 --disable-protobuf --disable-librist \
++    --disable-gnutls --disable-nettle --disable-gmp --disable-postproc \
++    --disable-lame --disable-twolame --disable-shout \
+ "
+ 
+ ###########################
+@@ -337,62 +320,29 @@ VLC_CONTRIB_ARGS="\
+ ###########################
+ 
+ VLC_CONFIGURE_ARGS="\
+-    --with-pic \
+-    --disable-nls \
+-    --enable-avformat \
+-    --enable-swscale \
+-    --enable-avcodec \
+-    --enable-opus \
+-    --enable-opensles \
+-    --enable-matroska \
+-    --enable-taglib \
+-    --enable-dvbpsi \
++    --with-pic --disable-nls \
+     --disable-vlc --disable-shared \
+-    --disable-update-check \
+-    --disable-vlm \
+-    --disable-dbus \
+-    --enable-lua \
+-    --disable-vcd \
+-    --disable-v4l2 \
+-    --enable-bluray \
+-    --disable-linsys \
+-    --disable-decklink \
+-    --disable-libva \
+-    --disable-dv1394 \
+-    --enable-mod \
+-    --disable-sid \
+-    --enable-gme \
+-    --disable-tremor \
+-    --disable-mad \
+-    --enable-mpg123 \
+-    --disable-dca \
+-    --disable-sdl-image \
+-    --enable-zvbi \
+-    --disable-fluidsynth \
+-    --enable-fluidlite \
+-    --disable-jack \
+-    --disable-pulse \
+-    --disable-alsa \
+-    --disable-samplerate \
+-    --disable-xcb \
+-    --disable-qt \
+-    --disable-skins2 \
+-    --disable-mtp \
+-    --disable-notify \
+-    --enable-libass \
+-    --disable-svg \
+-    --disable-udev \
+-    --enable-libxml2 \
+-    --disable-caca \
+-    --enable-gles2 \
+-    --disable-goom \
+-    --disable-projectm \
+-    --enable-sout \
+-    --enable-vorbis \
+-    --disable-faad \
+-    --disable-vnc \
+-    --enable-jpeg \
+-    --enable-smb2 \
++    --enable-avcodec --enable-avformat --enable-swscale \
++    --enable-opensles --enable-gles2 \
++    --enable-live555 --enable-dvbpsi --enable-soxr \
++    --disable-sout --disable-vlm --disable-lua \
++    --disable-update-check --disable-dbus --disable-addonmanagermodules \
++    --disable-vcd --disable-v4l2 --disable-linsys --disable-decklink \
++    --disable-libva --disable-dv1394 --disable-bluray --disable-dvdread \
++    --disable-dvdnav --disable-smb2 --disable-dsm --disable-nfs \
++    --disable-sftp --disable-upnp --disable-microdns --disable-chromecast \
++    --disable-gnutls --disable-libxml2 --disable-taglib --disable-matroska \
++    --disable-mod --disable-gme --disable-sid --disable-mpg123 --disable-mad \
++    --disable-opus --disable-vorbis --disable-ogg --disable-flac \
++    --disable-speex --disable-theora --disable-tremor --disable-dca \
++    --disable-a52 --disable-faad --disable-vpx --disable-aom --disable-dav1d \
++    --disable-libass --disable-freetype --disable-fribidi --disable-harfbuzz \
++    --disable-zvbi --disable-telx --disable-kate --disable-fluidsynth \
++    --disable-fluidlite --disable-libplacebo --disable-jpeg --disable-svg \
++    --disable-sdl-image --disable-samplerate --disable-jack --disable-pulse \
++    --disable-alsa --disable-xcb --disable-qt --disable-skins2 --disable-mtp \
++    --disable-notify --disable-udev --disable-caca --disable-goom \
++    --disable-projectm --disable-vnc --disable-srt --disable-archive \
+ "
+ 
+ ########################
+@@ -448,6 +398,120 @@ VLC_MODULE_BLACKLIST="
+     fb
+     aout_file
+     yuv
++    access_(concat|mms|output_.*)
++    adf
++    aiff
++    anaglyph
++    antiflicker
++    asf
++    avformat
++    avio
++    attachment
++    au
++    avi
++    blend
++    canvas
++    cc
++    cdg
++    chorus_flanger
++    colorthres
++    compressor
++    croppadd
++    cvdsub
++    decomp
++    demux_(cdg|chromecast|stl)
++    demuxdump
++    diracsys
++    directory_demux
++    dmxmus
++    dolby_surround_decoder
++    dtv
++    dvb
++    dvbsub
++    edgedetection
++    equalizer
++    extract
++    fingerprinter
++    flac
++    flacsys
++    flaschen
++    folder
++    fps
++    freeze
++    ftp
++    gain
++    gaussianblur
++    gradfun
++    hds
++    headphone_channel_mixer
++    hqdn3d
++    imem
++    invert
++    karaoke
++    logo
++    marq
++    mirror
++    mkv
++    mod
++    mono
++    mpgv
++    mux_.*
++    nsc
++    nsv
++    nuv
++    ogg
++    oggspots
++    oldmovie
++    packetizer_(a52|av1|dirac|dts|flac|mlp|mpegaudio|mpegvideo|mpeg4video|vc1)
++    param_eq
++    playlist
++    pva
++    rawaud
++    rawdv
++    rawvid
++    record
++    remap
++    rist
++    rotate
++    rtpvideo
++    satip
++    scte18
++    scte27
++    sepia
++    shm
++    smf
++    spatializer
++    spdif
++    spudec
++    stereo_widen
++    stl
++    stream_out_.*
++    subsdec
++    subsdelay
++    substx3g
++    subsusf
++    subtitle
++    svcdsub
++    syslog
++    t140
++    telx
++    textst
++    timecode
++    tospdif
++    transform
++    tta
++    ttml
++    ty
++    uleaddvaudio
++    vc1
++    vdr
++    vhs
++    vobsub
++    voc
++    vod_rtsp
++    wave
++    webvtt
++    xa
+     .dummy
+ "
+ 
+@@ -513,7 +577,7 @@ case $AVLC_CONTRIB_LICENSE in
+     ;;
+     g|*)
+         # GPL v3
+-        VLC_CONFIGURE_ARGS="$VLC_CONFIGURE_ARGS --enable-live555 --enable-dvdread"
++        VLC_CONFIGURE_ARGS="$VLC_CONFIGURE_ARGS --enable-live555"
+     ;;
+ esac
+ 
+diff --git a/libvlc/jni/Android.mk b/libvlc/jni/Android.mk
+index 7068558..aee6b29 100644
+--- a/libvlc/jni/Android.mk
++++ b/libvlc/jni/Android.mk
+@@ -33,7 +33,7 @@ LOCAL_LDLIBS := \
+     $(VLC_BUILD_DIR)/compat/.libs/libcompat.a \
+     $(VLC_CONTRIB_LDFLAGS) \
+     -ldl -lz -lm -llog \
+-    -ljpeg \
++    -liconv \
+     $(VLC_LDFLAGS) \
+     -Wl,-Bsymbolic
+ LOCAL_CXXFLAGS := -std=c++11
+diff --git a/libvlc/jni/libvlcjni.c b/libvlc/jni/libvlcjni.c
+index a051674..d3964b9 100644
+--- a/libvlc/jni/libvlcjni.c
++++ b/libvlc/jni/libvlcjni.c
+@@ -36,7 +36,9 @@
+ 
+ # include <limits.h>
+ # include <time.h>
++#ifdef HAVE_FONTCONFIG
+ # include <fontconfig/fontconfig.h>
++#endif
+ 
+ #include "libvlcjni-vlcobject.h"
+ #include "utils.h"
+@@ -485,6 +487,7 @@ jstring Java_org_videolan_libvlc_LibVLC_changeset(JNIEnv* env, jobject thiz)
+     return vlcNewStringUTF(env, libvlc_get_changeset());
+ }
+ 
++#ifdef HAVE_FONTCONFIG
+ /* A lock left behind by a process killed mid-scan blocks the cache of that
+  * directory until fontconfig considers it stale, which takes 10 minutes. The
+  * locks we take ourselves are only held for a fraction of a second, so anything
+@@ -563,11 +566,15 @@ static jboolean is_font_cache_valid(FcConfig *p_config)
+ 
+     return b_cached;
+ }
++#endif /* HAVE_FONTCONFIG */
+ 
+ jboolean Java_org_videolan_libvlc_LibVLC_nativeBuildFontCache(JNIEnv *env,
+                                                             jobject thiz)
+ {
+     (void) env; (void) thiz;
++#ifndef HAVE_FONTCONFIG
++    return JNI_TRUE; /* built without fontconfig: nothing to cache */
++#else
+     clean_font_cache_leftovers();
+ 
+     FcConfig *p_config = FcInitLoadConfigAndFonts();
+@@ -578,6 +585,7 @@ jboolean Java_org_videolan_libvlc_LibVLC_nativeBuildFontCache(JNIEnv *env,
+     FcConfigDestroy(p_config);
+ 
+     return b_cached;
++#endif
+ }
+ 
+ void Java_org_videolan_libvlc_LibVLC_nativeSetUserAgent(JNIEnv* env,

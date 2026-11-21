@@ -1,0 +1,18 @@
+diff --git a/contrib/src/ffmpeg/rules.mak b/contrib/src/ffmpeg/rules.mak
+index e4b5595b59..a80b51462d 100644
+--- a/contrib/src/ffmpeg/rules.mak
++++ b/contrib/src/ffmpeg/rules.mak
+@@ -84,6 +84,13 @@ ifneq ($(findstring amf,$(PKGS)),)
+ DEPS_ffmpeg += amf $(DEPS_amf)
+ endif
+ 
++# GardenCam: only the decoders/parsers needed for IP camera streams
++ifdef HAVE_ANDROID
++FFMPEGCONF += --disable-everything \
++	--enable-decoder=h264,hevc,mjpeg,png,aac,aac_latm,pcm_alaw,pcm_mulaw,adpcm_g726,adpcm_g726le \
++	--enable-parser=h264,hevc,mjpeg,png,aac,aac_latm
++endif
++
+ # Small size
+ ifdef WITH_OPTIMIZATION
+ ifdef ENABLE_SMALL

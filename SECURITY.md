@@ -16,7 +16,8 @@ Garden Cam (a fork of [ONVIF Camera](https://github.com/mretallack/cams), itself
 
 | Version | Supported          | Status                         |
 |---------|--------------------|--------------------------------|
-| 0.0.1   | :white_check_mark: | Current Garden Cam development |
+| 0.0.2   | :white_check_mark: | Current Garden Cam development |
+| 0.0.1   | :x:                | Superseded by 0.0.2            |
 
 Versions of Cams and ONVIF Camera (2.x) are separate apps and are not covered by this policy.
 
@@ -24,11 +25,17 @@ Versions of Cams and ONVIF Camera (2.x) are separate apps and are not covered by
 
 ### Core Dependencies
 
-#### VLC for Android (libvlc-all) - Version 3.7.7
+#### libvlc (custom build of VLC for Android 3.7.7)
 - **License**: LGPL 2.1+ / GPL 2.0+
-- **Purpose**: Video playback engine for RTSP/RTMP streams
+- **Purpose**: Video playback engine for RTSP and HTTP streams
+- **Build**: Stripped-down arm64-v8a build in `app/libs/libvlc.aar`, made from the patches and
+  script in `libvlc/`. Removing unused modules (subtitles, discs, network shares, Lua, most
+  demuxers and codecs) also shrinks the attack surface for untrusted media.
+- **TLS**: Not included. `https://` and `rtsps://` streams are unsupported, and RTSP and HTTP
+  traffic, including camera credentials, is unencrypted on the network.
 - **Risk Level**: LOW - Only connect to trusted camera sources
-- **Recommendation**: Keep up to date with libvlc-android releases
+- **Recommendation**: Rebuild with `libvlc/build-libvlc.sh` when vlc-android publishes a new 3.x
+  release; Maven Central updates no longer reach the app automatically
 
 #### AndroidX Libraries
 - **androidx.core:core-ktx**: 1.19.1
@@ -213,6 +220,9 @@ All dependencies use permissive open-source licenses (MIT, Apache 2.0, BSD, LGPL
 
 ## Changelog
 
+- **2026-11-22**: Version 0.0.2
+  - libvlc replaced with a stripped-down custom build without TLS
+  - Only arm64-v8a is supported
 - **2026-11-21**: Updated for the Garden Cam fork
   - ONVIF credentials moved to AES-256-GCM with an Android Keystore key
   - Corrected the description of RTSP/SFTP password storage
@@ -226,5 +236,5 @@ All dependencies use permissive open-source licenses (MIT, Apache 2.0, BSD, LGPL
 
 ---
 
-*Last Updated: 2026-11-21*  
-*Version: 0.0.1*
+*Last Updated: 2026-11-22*  
+*Version: 0.0.2*

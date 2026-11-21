@@ -65,17 +65,19 @@
             <h1>Garden Cam, wersja %1$s</h1><br/>
             <b>Fork aplikacji ONVIF Camera (Mark Retallack), która jest forkiem aplikacji Cams (vladpen)</b><br/><br/>
             Rozwijane przez evilbunny2008<br/>
-            <a href="https://github.com/evilbunny2008/cams">Strona domowa</a><br/><br/>
+            <a href="https://github.com/evilbunny2008/GardenCam">Strona domowa</a><br/><br/>
             Poprzedni fork: <a href="https://github.com/mretallack/cams">https://github.com/mretallack/cams</a><br/>
             Oryginalna aplikacja: <a href="https://github.com/vladpen/cams">https://github.com/vladpen/cams</a><br/><br/>
             Copyright &copy; %2$s evilbunny2008, Mark Retallack, vladpen<br/>
             Licencja MIT<br/><br/>
-            <a href="https://github.com/evilbunny2008/cams/issues">
+            Odtwarzanie wideo: libVLC 3.7.7 od VideoLAN (własna kompilacja, LGPL 2.1+)<br/>
+            <a href="https://github.com/evilbunny2008/GardenCam/tree/main/libvlc">Kod źródłowy i zmiany</a><br/><br/>
+            <a href="https://github.com/evilbunny2008/GardenCam/issues">
                 Raporty o błędach i narzędzie do śledzenia problemów</a>
         ]]>
     </string>
     <string name="manual_link">
-        <![CDATA[<a href="https://github.com/evilbunny2008/cams#readme">Instrukcja</a>]]>
+        <![CDATA[<a href="https://github.com/evilbunny2008/GardenCam#readme">Instrukcja</a>]]>
     </string>
     <string name="copy">Kopiuj</string>
     <string name="paste">Wklej</string>
