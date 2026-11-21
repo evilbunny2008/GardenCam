@@ -1,5 +1,10 @@
 ## 0.0.2 - unreleased
 
+### Changes
+- The camera editor shows RTSP stream passwords as text instead of `***`; the ONVIF URL on the same
+  screen already showed the password. SFTP passwords stay masked. Passwords are still stored
+  encrypted.
+
 ### Fixes
 - The About screen scrolls, so the credits, the issue tracker link and **Device logs** can be reached
   in landscape.

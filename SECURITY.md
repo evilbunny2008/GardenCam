@@ -132,6 +132,8 @@ they silently fell back to Base64. Garden Cam encrypts them with AES-256-GCM and
 - Android app storage is private by default
 - Requires root access or device compromise to read
 **Recommendation**: Move these to the Android Keystore, like ONVIF credentials
+**Note**: Since 0.0.2 the camera editor shows RTSP passwords as text (SFTP passwords stay masked).
+Camera passwords are treated as low value, and the ONVIF URL on the same screen already shows one.
 
 ### 4. Cleartext Traffic Permitted (BY DESIGN)
 **Issue**: App allows HTTP connections (not HTTPS only)

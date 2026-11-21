@@ -1,1 +1,2 @@
 - About screen now scrolls, so Device logs and the issue tracker link can be reached in landscape
+- Camera editor shows RTSP stream passwords instead of ***

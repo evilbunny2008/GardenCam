@@ -64,8 +64,8 @@ class EditActivity : AppCompatActivity() {
             binding.toolbar.tvLabel.text = stream.name
 
             binding.etEditName.setText(stream.name)
-            binding.etEditUrl.setText(safeUrl(stream.url))
-            binding.etEditChannel.setText(safeUrl(stream.url2))
+            binding.etEditUrl.setText(plainUrl(stream.url))
+            binding.etEditChannel.setText(plainUrl(stream.url2))
             binding.etEditSftpUrl.setText(safeUrl(stream.sftp))
             binding.rbEditTcp.isChecked = stream.tcp
             binding.rbEditUdp.isChecked = !stream.tcp
@@ -149,8 +149,15 @@ class EditActivity : AppCompatActivity() {
         Alert.init(this, binding.toolbar.btnAlert)
     }
 
+    // SFTP passwords stay masked; the server they unlock may hold more than camera footage
     private fun safeUrl(url: String?): String {
         return if (url != null) replacePassword(url, "***") else ""
+    }
+
+    // Camera (RTSP) passwords are shown as typed: they are not sensitive enough to hide, and the
+    // ONVIF URL on this screen shows the same password anyway
+    private fun plainUrl(url: String?): String {
+        return if (url != null) Utils.decodeUrl(url) else ""
     }
 
     private fun getEncodedUrl(newUrl: String, oldUrl: String?): String {
@@ -158,8 +165,9 @@ class EditActivity : AppCompatActivity() {
         val old = parseUrl(oldUrl)
         if (new != null && old != null && new.password == "***")
             return replacePassword(newUrl, encodeString(decodeString(old.password)))
+        // Passwords in the fields are always plain text (or "***" for an unchanged SFTP password)
         if (new != null && new.password != "")
-            return replacePassword(newUrl, encodeString(decodeString(new.password)))
+            return replacePassword(newUrl, encodeString(new.password))
         return newUrl
     }
 
@@ -295,7 +303,7 @@ class EditActivity : AppCompatActivity() {
         val stream = StreamData.getById(StreamData.copyStreamId) ?: return
 
         binding.etEditName.setText(stream.name, TextView.BufferType.EDITABLE)
-        binding.etEditUrl.setText(safeUrl(stream.url), TextView.BufferType.EDITABLE)
+        binding.etEditUrl.setText(plainUrl(stream.url), TextView.BufferType.EDITABLE)
         binding.etEditSftpUrl.setText(safeUrl(stream.sftp), TextView.BufferType.EDITABLE)
         binding.rbEditTcp.isChecked = stream.tcp
         binding.rbEditUdp.isChecked = !stream.tcp
