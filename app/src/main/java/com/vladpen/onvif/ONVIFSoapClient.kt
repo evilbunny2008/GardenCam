@@ -1,6 +1,5 @@
 package com.vladpen.onvif
 
-import kotlinx.coroutines.*
 import java.io.StringWriter
 import java.net.HttpURLConnection
 import java.net.URL

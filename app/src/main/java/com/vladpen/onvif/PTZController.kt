@@ -73,7 +73,7 @@ class PTZController(
         return "$baseUrl/onvif/media_service"
     }
 
-    private suspend fun getFirstProfile(): String? {
+    private fun getFirstProfile(): String? {
         val mediaUrl = mediaServiceUrl ?: return null
         
         // Try multiple possible media endpoints

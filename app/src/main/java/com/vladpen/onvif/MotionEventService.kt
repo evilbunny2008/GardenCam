@@ -2,10 +2,11 @@ package com.vladpen.onvif
 
 import kotlinx.coroutines.*
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.time.Duration.Companion.milliseconds
 
 class MotionEventService(
     private val serviceUrl: String,
-    private val credentials: ONVIFCredentials?
+    credentials: ONVIFCredentials?
 ) {
     companion object {
         private const val EVENT_NAMESPACE = "http://www.onvif.org/ver10/events/wsdl"
@@ -53,7 +54,7 @@ class MotionEventService(
                     subscriptions[deviceId] = subscription
                     
                     android.util.Log.d("MOTION_EVENT", "Starting event polling...")
-                    startEventPolling(deviceId, subscriptionId)
+                    startEventPolling(deviceId)
                     android.util.Log.d("MOTION_EVENT", "Motion event subscription successful!")
                     return@withContext true
                 }
@@ -161,10 +162,10 @@ class MotionEventService(
                         lastMotionState = motionDetected
                     }
                     
-                    delay(5000) // Poll every 5 seconds
+                    delay(5000.milliseconds) // Poll every 5 seconds
                 } catch (e: Exception) {
                     android.util.Log.e("MOTION_EVENT", "Error in fast polling: ${e.message}", e)
-                    delay(5000)
+                    delay(5000.milliseconds)
                 }
             }
             android.util.Log.d("MOTION_EVENT", "Fast polling stopped for device: $deviceId")
@@ -204,7 +205,7 @@ class MotionEventService(
         }
     }
 
-    private fun startEventPolling(deviceId: String, subscriptionId: String) {
+    private fun startEventPolling(deviceId: String) {
         android.util.Log.d("MOTION_EVENT", "Starting event polling for device: $deviceId")
         scope.launch {
             while (subscriptions[deviceId]?.isActive == true) {
@@ -220,10 +221,10 @@ class MotionEventService(
                     
                     response?.let { parseEventMessages(it, deviceId) }
                     
-                    delay(1000) // Poll every second
+                    delay(1000.milliseconds) // Poll every second
                 } catch (e: Exception) {
                     android.util.Log.e("MOTION_EVENT", "Error polling events: ${e.message}", e)
-                    delay(5000) // Wait longer on error
+                    delay(5000.milliseconds) // Wait longer on error
                 }
             }
             android.util.Log.d("MOTION_EVENT", "Event polling stopped for device: $deviceId")

@@ -3,6 +3,7 @@ package com.vladpen.onvif
 import kotlinx.coroutines.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
+import kotlin.time.Duration.Companion.milliseconds
 
 class ONVIFConnectionPool private constructor() {
     companion object {
@@ -86,7 +87,7 @@ class ONVIFConnectionPool private constructor() {
     init {
         scope.launch {
             while (isActive) {
-                delay(60000) // Cleanup every minute
+                delay(60000.milliseconds) // Cleanup every minute
                 cleanup()
             }
         }

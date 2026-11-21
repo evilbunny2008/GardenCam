@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import kotlinx.coroutines.*
+import kotlin.time.Duration.Companion.milliseconds
 
 class PTZControlView @JvmOverloads constructor(
     context: Context,
@@ -146,7 +147,7 @@ class PTZControlView @JvmOverloads constructor(
     }
 
     // Required alongside onTouchEvent for accessibility (lint ClickableViewAccessibility)
-    @Suppress("EmptyMethod")
+    @Suppress("EmptyMethod", "RedundantOverride")
     override fun performClick(): Boolean {
         return super.performClick()
     }
@@ -193,7 +194,7 @@ class PTZControlView @JvmOverloads constructor(
         controlJob = scope.launch {
             val direction = if (factor > 0) ZoomDirection.IN else ZoomDirection.OUT
             ptzController?.zoom(direction, kotlin.math.abs(factor))
-            delay(100)
+            delay(100.milliseconds)
             ptzController?.stop()
         }
     }

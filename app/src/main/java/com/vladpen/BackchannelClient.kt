@@ -148,7 +148,7 @@ class BackchannelClient {
 
             val setupUrl = resolveControlUrl(host, port, path, track.controlUrl)
             android.util.Log.d("BACKCHANNEL", "client.start: SETUP url=$setupUrl")
-            if (!setup(setupUrl, host, port, path, username, password)) {
+            if (!setup(setupUrl, username, password)) {
                 android.util.Log.e("BACKCHANNEL", "client.start: SETUP failed")
                 return false
             }
@@ -257,7 +257,7 @@ class BackchannelClient {
         return if (resp2.startsWith("RTSP/1.0 200")) extractBody(resp2) else null
     }
 
-    private fun setup(url: String, host: String, port: Int, path: String, username: String, password: String): Boolean {
+    private fun setup(url: String, username: String, password: String): Boolean {
         val headers = mutableMapOf(
             "Transport" to "RTP/AVP/TCP;unicast;interleaved=$interleavedChannel-${interleavedChannel + 1}",
             "Require" to "www.onvif.org/ver20/backchannel"

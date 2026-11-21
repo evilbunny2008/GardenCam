@@ -8,7 +8,8 @@ import com.vladpen.cams.MainApp.Companion.context
 import kotlin.math.*
 
 /**
- * @param view outer (root) view
+ * Pans and zooms the parent (outer) view of [videoView].
+ *
  * @param videoView inner view
  */
 class VideoGestureDetector(private val videoView: View) {
@@ -30,8 +31,8 @@ class VideoGestureDetector(private val videoView: View) {
 
     fun onTouchEvent(event: MotionEvent): Boolean {
         val scaleEventResult = scaleGestureDetector.onTouchEvent(event)
-        return if (scaleEventResult == scaleGestureDetector.isInProgress) true
-        else gestureDetector.onTouchEvent(event)
+        return scaleEventResult == scaleGestureDetector.isInProgress
+                || gestureDetector.onTouchEvent(event)
     }
 
     fun reset() {

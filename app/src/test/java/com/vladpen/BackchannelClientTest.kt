@@ -9,7 +9,7 @@ class BackchannelClientTest {
 
     // === SDP Parsing Tests ===
 
-    private val CAMERA2_SDP = """
+    private val camera2Sdp = """
         v=0
         o=- 1775517319693774 1 IN IP4 10.0.0.63
         s=thingino prudynt
@@ -48,19 +48,19 @@ class BackchannelClientTest {
 
     @Test
     fun parseSdpFindsBackchannelTracks() {
-        val tracks = client.parseSdpForBackchannel(CAMERA2_SDP)
+        val tracks = client.parseSdpForBackchannel(camera2Sdp)
         assertEquals(3, tracks.size)
     }
 
     @Test
     fun parseSdpPrefersPCMU() {
-        val tracks = client.parseSdpForBackchannel(CAMERA2_SDP)
+        val tracks = client.parseSdpForBackchannel(camera2Sdp)
         assertEquals(BackchannelClient.Codec.PCMU, tracks[0].codec)
     }
 
     @Test
     fun parseSdpPCMUDetails() {
-        val tracks = client.parseSdpForBackchannel(CAMERA2_SDP)
+        val tracks = client.parseSdpForBackchannel(camera2Sdp)
         val pcmu = tracks.first { it.codec == BackchannelClient.Codec.PCMU }
         assertEquals(0, pcmu.payloadType)
         assertEquals(8000, pcmu.sampleRate)
@@ -69,7 +69,7 @@ class BackchannelClientTest {
 
     @Test
     fun parseSdpPCMADetails() {
-        val tracks = client.parseSdpForBackchannel(CAMERA2_SDP)
+        val tracks = client.parseSdpForBackchannel(camera2Sdp)
         val pcma = tracks.first { it.codec == BackchannelClient.Codec.PCMA }
         assertEquals(8, pcma.payloadType)
         assertEquals(8000, pcma.sampleRate)
@@ -78,7 +78,7 @@ class BackchannelClientTest {
 
     @Test
     fun parseSdpAACDetails() {
-        val tracks = client.parseSdpForBackchannel(CAMERA2_SDP)
+        val tracks = client.parseSdpForBackchannel(camera2Sdp)
         val aac = tracks.first { it.codec == BackchannelClient.Codec.AAC }
         assertEquals(97, aac.payloadType)
         assertEquals(16000, aac.sampleRate)
@@ -87,7 +87,7 @@ class BackchannelClientTest {
 
     @Test
     fun parseSdpSortOrder() {
-        val tracks = client.parseSdpForBackchannel(CAMERA2_SDP)
+        val tracks = client.parseSdpForBackchannel(camera2Sdp)
         assertEquals(BackchannelClient.Codec.PCMU, tracks[0].codec)
         assertEquals(BackchannelClient.Codec.PCMA, tracks[1].codec)
         assertEquals(BackchannelClient.Codec.AAC, tracks[2].codec)

@@ -111,9 +111,9 @@ class StreamsActivity : AppCompatActivity(), Layout {
 
         try { // prevents exception if settings file is corrupted
             initActivity(sourceType)
-            val urls = streams.mapNotNull { StreamData.getById(it) }.flatMap { com.vladpen.LocalNetwork.urlsOf(it) }
-            if (com.vladpen.LocalNetwork.needsPermission(this, urls))
-                localNetworkLauncher.launch(com.vladpen.LocalNetwork.PERMISSION)
+            val urls = streams.mapNotNull { StreamData.getById(it) }.flatMap { LocalNetwork.urlsOf(it) }
+            if (LocalNetwork.needsPermission(this, urls))
+                localNetworkLauncher.launch(LocalNetwork.PERMISSION)
             if (savedInstanceState == null) {
                 initFragments()
             }
@@ -499,7 +499,7 @@ class StreamsActivity : AppCompatActivity(), Layout {
         Effects.cancel()
         if (!isGroup) {
             val stream = StreamData.getById(sourceId)
-            if (stream != null && stream.sftp != null) {
+            if (stream?.sftp != null) {
                 binding.toolbar.btnLink.visibility = View.VISIBLE
                 binding.toolbar.btnLink.setOnClickListener {
                     filesScreen()
@@ -525,44 +525,44 @@ class StreamsActivity : AppCompatActivity(), Layout {
     }
 
     private fun initOnvifFeatures() {
-        android.util.Log.d("ONVIF", "initOnvifFeatures called")
+        Log.d("ONVIF", "initOnvifFeatures called")
         // For single stream, check if it's ONVIF enabled
         if (!isGroup && streams.isNotEmpty()) {
             val stream = StreamData.getById(streams[0])
-            android.util.Log.d("ONVIF", "Stream: ${stream?.name}, isOnvif: ${stream?.isOnvifDevice}")
+            Log.d("ONVIF", "Stream: ${stream?.name}, isOnvif: ${stream?.isOnvifDevice}")
             
             if (stream?.isOnvifDevice == true && stream.onvifServiceUrl != null) {
-                android.util.Log.d("ONVIF", "ONVIF stream detected - PTZ controls available via touch")
+                Log.d("ONVIF", "ONVIF stream detected - PTZ controls available via touch")
                 
                 // Initialize ONVIF features
                 onvifManager = ONVIFManager.getInstance()
                 
                 // Enable PTZ controls for ONVIF devices regardless of strict capability flags
-                android.util.Log.d("ONVIF", "Initializing PTZ controls")
+                Log.d("ONVIF", "Initializing PTZ controls")
                 initPTZControls(stream)
                 
                 if (stream.deviceCapabilities?.supportsMotionEvents == true) {
-                    android.util.Log.d("ONVIF", "Initializing motion detection")
-                    android.util.Log.d("ONVIF", "Device capabilities: ${stream.deviceCapabilities}")
+                    Log.d("ONVIF", "Initializing motion detection")
+                    Log.d("ONVIF", "Device capabilities: ${stream.deviceCapabilities}")
                     initMotionDetection(stream)
                 } else {
-                    android.util.Log.d("ONVIF", "Motion events not supported. Capabilities: ${stream.deviceCapabilities}")
+                    Log.d("ONVIF", "Motion events not supported. Capabilities: ${stream.deviceCapabilities}")
                 }
             } else {
-                android.util.Log.d("ONVIF", "Not an ONVIF device or missing service URL")
+                Log.d("ONVIF", "Not an ONVIF device or missing service URL")
             }
         } else {
-            android.util.Log.d("ONVIF", "Group stream or no streams available")
+            Log.d("ONVIF", "Group stream or no streams available")
         }
     }
 
     private fun initPTZControls(stream: StreamDataModel) {
-        android.util.Log.d("ONVIF", "initPTZControls called")
+        Log.d("ONVIF", "initPTZControls called")
         val serviceUrl = stream.onvifServiceUrl ?: return
         val credentials = stream.onvifCredentials
         val deviceId = stream.url // Use RTSP URL as device ID consistently
         
-        android.util.Log.d("ONVIF", "Creating PTZ control view")
+        Log.d("ONVIF", "Creating PTZ control view")
         // Create PTZ control view
         ptzControlView = PTZControlView(this).apply {
             layoutParams = ViewGroup.LayoutParams(
@@ -571,23 +571,23 @@ class StreamsActivity : AppCompatActivity(), Layout {
             )
         }
         
-        android.util.Log.d("ONVIF", "Adding PTZ control view to container")
+        Log.d("ONVIF", "Adding PTZ control view to container")
         // Add to streams container
         binding.rlStreamsBox.addView(ptzControlView)
         
-        android.util.Log.d("ONVIF", "PTZ control view setup complete")
+        Log.d("ONVIF", "PTZ control view setup complete")
         
         // Initialize PTZ controller SYNCHRONOUSLY first
-        android.util.Log.d("ONVIF", "Creating PTZ controller for device: $deviceId")
+        Log.d("ONVIF", "Creating PTZ controller for device: $deviceId")
         val controller = onvifManager?.initializePTZController(deviceId, serviceUrl, credentials)
         
         if (controller != null) {
-            android.util.Log.d("ONVIF", "PTZ controller created successfully")
+            Log.d("ONVIF", "PTZ controller created successfully")
             ptzControlView?.setPTZController(controller)
             
             ptzControlView?.setListener(object : PTZControlView.PTZControlListener {
                 override fun onPTZCommand(direction: PTZDirection, isPressed: Boolean) {
-                    android.util.Log.d("ONVIF", "PTZ command: $direction, pressed: $isPressed")
+                    Log.d("ONVIF", "PTZ command: $direction, pressed: $isPressed")
                     onvifScope.launch {
                         if (isPressed) {
                             onvifManager?.performPTZMove(deviceId, direction)
@@ -598,24 +598,24 @@ class StreamsActivity : AppCompatActivity(), Layout {
                 }
 
                 override fun onZoomCommand(factor: Float) {
-                    android.util.Log.d("ONVIF", "Zoom command: $factor")
+                    Log.d("ONVIF", "Zoom command: $factor")
                     onvifScope.launch {
                         onvifManager?.performZoom(deviceId, factor)
                     }
                 }
             })
         } else {
-            android.util.Log.e("ONVIF", "Failed to create PTZ controller")
+            Log.e("ONVIF", "Failed to create PTZ controller")
         }
     }
 
     private fun initMotionDetection(stream: StreamDataModel) {
-        android.util.Log.d("MOTION_INIT", "=== Initializing motion detection ===")
+        Log.d("MOTION_INIT", "=== Initializing motion detection ===")
         val serviceUrl = stream.onvifServiceUrl ?: return
         val credentials = stream.onvifCredentials
         
-        android.util.Log.d("MOTION_INIT", "Service URL: $serviceUrl")
-        android.util.Log.d("MOTION_INIT", "Has credentials: ${credentials != null}")
+        Log.d("MOTION_INIT", "Service URL: $serviceUrl")
+        Log.d("MOTION_INIT", "Has credentials: ${credentials != null}")
         
         // Create motion indicator
         motionIndicator = MotionIndicator(this).apply {
@@ -627,39 +627,39 @@ class StreamsActivity : AppCompatActivity(), Layout {
         
         // Add to streams container
         binding.rlStreamsBox.addView(motionIndicator)
-        android.util.Log.d("MOTION_INIT", "Motion indicator added to view")
+        Log.d("MOTION_INIT", "Motion indicator added to view")
         
         // Initialize motion event service
         onvifScope.launch {
             val deviceId = stream.url
-            android.util.Log.d("MOTION_INIT", "Initializing motion event service for device: $deviceId")
+            Log.d("MOTION_INIT", "Initializing motion event service for device: $deviceId")
             
             val service = onvifManager?.initializeMotionEventService(deviceId, serviceUrl, credentials)
-            android.util.Log.d("MOTION_INIT", "Motion event service created: ${service != null}")
+            Log.d("MOTION_INIT", "Motion event service created: ${service != null}")
             
             onvifManager?.setListener(object : ONVIFManager.ONVIFManagerListener {
                 override fun onMotionDetected(deviceId: String) {
-                    android.util.Log.d("MOTION_INIT", "*** Motion detected callback for: $deviceId ***")
+                    Log.d("MOTION_INIT", "*** Motion detected callback for: $deviceId ***")
                     if (deviceId == stream.url) {
                         runOnUiThread {
-                            android.util.Log.d("MOTION_INIT", "Showing motion indicator")
+                            Log.d("MOTION_INIT", "Showing motion indicator")
                             motionIndicator?.showMotionDetected()
                         }
                     }
                 }
                 
                 override fun onMotionStopped(deviceId: String) {
-                    android.util.Log.d("MOTION_INIT", "*** Motion stopped callback for: $deviceId ***")
+                    Log.d("MOTION_INIT", "*** Motion stopped callback for: $deviceId ***")
                     if (deviceId == stream.url) {
                         runOnUiThread {
-                            android.util.Log.d("MOTION_INIT", "Hiding motion indicator")
+                            Log.d("MOTION_INIT", "Hiding motion indicator")
                             motionIndicator?.hideMotionDetected()
                         }
                     }
                 }
                 
                 override fun onPTZError(deviceId: String, error: String) {
-                    android.util.Log.w("PTZ", "$deviceId: $error")
+                    Log.w("PTZ", "$deviceId: $error")
                 }
             })
             
@@ -668,17 +668,17 @@ class StreamsActivity : AppCompatActivity(), Layout {
     }
 
     private fun togglePTZControls() {
-        android.util.Log.d("ONVIF", "togglePTZControls called")
+        Log.d("ONVIF", "togglePTZControls called")
         ptzControlView?.let { ptzView ->
-            android.util.Log.d("ONVIF", "PTZ control view exists, current visibility: ${ptzView.visibility}")
+            Log.d("ONVIF", "PTZ control view exists, current visibility: ${ptzView.visibility}")
             if (ptzView.isVisible) {
                 ptzView.hide()
-                android.util.Log.d("ONVIF", "Hiding PTZ controls")
+                Log.d("ONVIF", "Hiding PTZ controls")
             } else {
                 ptzView.show()
-                android.util.Log.d("ONVIF", "Showing PTZ controls")
+                Log.d("ONVIF", "Showing PTZ controls")
             }
-        } ?: android.util.Log.d("ONVIF", "PTZ control view is null!")
+        } ?: Log.d("ONVIF", "PTZ control view is null!")
     }
 
     override fun onDestroy() {
@@ -696,7 +696,7 @@ class StreamsActivity : AppCompatActivity(), Layout {
     }
 
     private fun runOnvifDebugTests() {
-        android.util.Log.d("ONVIF", "Running ONVIF debug tests...")
+        Log.d("ONVIF", "Running ONVIF debug tests...")
         val debugTester = ONVIFDebugTester(this)
         debugTester.runAllTests()
         
@@ -706,7 +706,7 @@ class StreamsActivity : AppCompatActivity(), Layout {
             if (stream?.isOnvifDevice == true && stream.onvifServiceUrl != null) {
                 val credentials = stream.onvifCredentials
                 if (credentials != null) {
-                    android.util.Log.d("ONVIF", "Testing with real camera configuration...")
+                    Log.d("ONVIF", "Testing with real camera configuration...")
                     debugTester.testRealCamera(stream.onvifServiceUrl, credentials.username, credentials.password)
                 }
             }

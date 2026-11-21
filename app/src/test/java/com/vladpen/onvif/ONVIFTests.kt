@@ -2,7 +2,6 @@ package com.vladpen.onvif
 
 import org.junit.Test
 import org.junit.Assert.*
-import org.mockito.Mockito.*
 
 class ONVIFSecurityTest {
 
@@ -45,7 +44,7 @@ class PTZControllerTest {
     @Test
     fun testPTZDirectionMapping() {
         // Test that PTZ directions map correctly
-        val directions = PTZDirection.values()
+        val directions = PTZDirection.entries
         assertEquals("Should have 4 directions", 4, directions.size)
         
         assertTrue("Should contain UP", directions.contains(PTZDirection.UP))

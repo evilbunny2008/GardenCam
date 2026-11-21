@@ -25,6 +25,7 @@ import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlin.time.Duration.Companion.milliseconds
 
 data class ConnectionDataModel(val session: Session, val channel: ChannelSftp)
 
@@ -110,7 +111,7 @@ class AlertWork(context: Context, params: WorkerParameters) : CoroutineWorker(co
         val password = Utils.decodeString(sftpData.password)
 
         val session = jsch.getSession(sftpData.user, sftpData.host, sftpData.port)
-        session?.setPassword(password)
+        session?.setPassword(password.toByteArray())
         session?.setConfig("StrictHostKeyChecking", "no")
         session?.connect(3000)
 
@@ -164,8 +165,8 @@ class AlertWork(context: Context, params: WorkerParameters) : CoroutineWorker(co
             if (!enable)
                 throw Exception("All streams are disabled")
             if (connections.isEmpty())
-                delay(10000)
-            delay(checkIntervalMillis.toLong())
+                delay(10000.milliseconds)
+            delay(checkIntervalMillis.toLong().milliseconds)
         }
     }
 
@@ -173,8 +174,7 @@ class AlertWork(context: Context, params: WorkerParameters) : CoroutineWorker(co
         val ls = channel.ls(path)
         var mTime = 0
         var folderName = ""
-        ls.forEach {
-            val e = it
+        ls.forEach { e ->
             if (e.filename == "." || e.filename == "..")
                 return@forEach
             if (mTime == 0 || e.attrs.mTime > mTime) {

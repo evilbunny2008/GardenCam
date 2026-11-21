@@ -120,7 +120,7 @@ class TouchGestureOverlay @JvmOverloads constructor(
     }
 
     // Required alongside onTouchEvent for accessibility (lint ClickableViewAccessibility)
-    @Suppress("EmptyMethod")
+    @Suppress("EmptyMethod", "RedundantOverride")
     override fun performClick(): Boolean {
         return super.performClick()
     }

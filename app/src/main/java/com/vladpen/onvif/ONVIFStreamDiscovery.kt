@@ -88,7 +88,7 @@ class ONVIFStreamDiscovery {
         )
     }
     
-    private suspend fun getStreamUri(client: ONVIFSoapClient, profileToken: String): String {
+    private fun getStreamUri(client: ONVIFSoapClient, profileToken: String): String {
         Log.d("ONVIF", "Getting stream URI for profile token: $profileToken")
         
         val streamSetup = mapOf(

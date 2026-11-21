@@ -18,9 +18,9 @@ import com.vladpen.Utils.replacePassword
 import com.vladpen.onvif.*
 import kotlinx.coroutines.launch
 import com.vladpen.cams.databinding.ActivityEditBinding
-import com.vladpen.onvif.*
 import kotlinx.coroutines.*
 import java.util.Locale
+import kotlin.time.Duration.Companion.milliseconds
 
 class EditActivity : AppCompatActivity() {
     private val binding by lazy { ActivityEditBinding.inflate(layoutInflater) }
@@ -76,9 +76,9 @@ class EditActivity : AppCompatActivity() {
             if (stream.isOnvifDevice && stream.onvifServiceUrl != null) {
                 val credentials = stream.onvifCredentials
                 val onvifUrl = if (credentials != null) {
-                    "onvif://${credentials.username}:${credentials.password}@${stream.onvifServiceUrl!!.removePrefix("http://")}"
+                    "onvif://${credentials.username}:${credentials.password}@${stream.onvifServiceUrl.removePrefix("http://")}"
                 } else {
-                    stream.onvifServiceUrl!!
+                    stream.onvifServiceUrl
                 }
                 binding.etOnvifUrl.setText(onvifUrl)
                 binding.cbInvertHorizontal.isChecked = stream.invertHorizontalPTZ
@@ -430,7 +430,7 @@ class EditActivity : AppCompatActivity() {
         }
         
         // Also trigger when user finishes typing (after 1 second delay)
-        var discoveryJob: kotlinx.coroutines.Job? = null
+        var discoveryJob: Job? = null
         binding.etOnvifUrl.addTextChangedListener(object : android.text.TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -446,7 +446,7 @@ class EditActivity : AppCompatActivity() {
                         Log.e("ONVIF_HANDLER", "=== Starting 1-second delay timer for discovery ===")
                         // Wait 1 second after user stops typing before triggering discovery
                         discoveryJob = lifecycleScope.launch {
-                            kotlinx.coroutines.delay(1000)
+                            delay(1000.milliseconds)
                             Log.e("ONVIF_HANDLER", "=== Timer expired, triggering discovery ===")
                             discoverStreamsFromOnvif(onvifUrl)
                         }
