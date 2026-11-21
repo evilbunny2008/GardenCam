@@ -638,8 +638,6 @@ class StreamsActivity : AppCompatActivity(), Layout {
             android.util.Log.d("MOTION_INIT", "Motion event service created: ${service != null}")
             
             onvifManager?.setListener(object : ONVIFManager.ONVIFManagerListener {
-                override fun onDeviceDiscovered(devices: List<ONVIFDevice>) {}
-                
                 override fun onMotionDetected(deviceId: String) {
                     android.util.Log.d("MOTION_INIT", "*** Motion detected callback for: $deviceId ***")
                     if (deviceId == stream.url) {
@@ -660,7 +658,9 @@ class StreamsActivity : AppCompatActivity(), Layout {
                     }
                 }
                 
-                override fun onPTZError(deviceId: String, error: String) {}
+                override fun onPTZError(deviceId: String, error: String) {
+                    android.util.Log.w("PTZ", "$deviceId: $error")
+                }
             })
             
             onvifManager?.subscribeToMotionEvents(deviceId)

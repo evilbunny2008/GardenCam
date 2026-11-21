@@ -22,7 +22,6 @@ class ONVIFManager private constructor() {
     private val discovery = ONVIFDiscovery()
 
     interface ONVIFManagerListener {
-        fun onDeviceDiscovered(devices: List<ONVIFDevice>)
         fun onMotionDetected(deviceId: String)
         fun onMotionStopped(deviceId: String)
         fun onPTZError(deviceId: String, error: String)
@@ -43,7 +42,6 @@ class ONVIFManager private constructor() {
                 deviceCache[device.deviceId] = device
             }
             
-            listener?.onDeviceDiscovered(devices)
             devices
         } catch (e: Exception) {
             emptyList()

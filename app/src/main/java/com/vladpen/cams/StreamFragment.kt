@@ -61,8 +61,6 @@ class StreamFragment : Fragment(), Player {
     }
 
     override fun onBufferReady(isAudioAvailable: Boolean) {
-        super.onBufferReady(isAudioAvailable)
-
         (activity as StreamsActivity).hideLoading(streamId)
         if (isAudioAvailable) {
             (activity as StreamsActivity).showMute()

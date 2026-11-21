@@ -40,7 +40,6 @@ interface Player {
             when (it.type) {
                 MediaPlayer.Event.Buffering -> if (it.buffering == 100f)
                     onBufferReady(mediaPlayer.audioTracksCount > 0)
-                MediaPlayer.Event.EndReached -> onEndReached()
             }
         }
     }
@@ -86,7 +85,5 @@ interface Player {
         return false
     }
 
-    fun onBufferReady(isAudioAvailable: Boolean) { }
-
-    fun onEndReached() { }
+    fun onBufferReady(isAudioAvailable: Boolean)
 }
