@@ -44,6 +44,7 @@ android {
         }
     }
     namespace 'com.vladpen.cams'
+    buildToolsVersion '37.0.0'
 }
 
 // Assign different versionCodes per architecture for F-Droid

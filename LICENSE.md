@@ -2,8 +2,8 @@
 
 ## ONVIF Camera
 
-Copyright (c) 2026 Mark Retallack  
-Copyright (c) 2022 vladpen (original Cams app)
+Copyright © 2026 Mark Retallack  
+Copyright © 2022 vladpen (original Cams app)
 
 This project is licensed under the MIT License - see below for details.
 
