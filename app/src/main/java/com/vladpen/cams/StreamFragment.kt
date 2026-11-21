@@ -68,7 +68,12 @@ class StreamFragment : Fragment(), Player {
     }
 
     fun initPlayer() {
-        initPlayer(requireContext(), binding.videoLayout, stream.tcp)
+        // PTZ streams drop audio so the picture keeps up with camera movement
+        initPlayer(requireContext(), binding.videoLayout, stream.tcp, audio = !hasPTZ())
+    }
+
+    private fun hasPTZ(): Boolean {
+        return stream.onvifServiceUrl != null && stream.onvifCredentials != null
     }
 
     fun getFrame(): FrameLayout {
@@ -86,7 +91,7 @@ class StreamFragment : Fragment(), Player {
         android.util.Log.d("STREAM_PTZ", "PTZ overlay configured")
         
         // Initialize PTZ controls if ONVIF is configured
-        if (stream.onvifServiceUrl != null && stream.onvifCredentials != null) {
+        if (hasPTZ()) {
             android.util.Log.d("STREAM_PTZ", "Initializing ONVIF PTZ controller")
             android.util.Log.d("STREAM_PTZ", "Service URL: ${stream.onvifServiceUrl}")
             android.util.Log.d("STREAM_PTZ", "Username: ${stream.onvifCredentials?.username}")

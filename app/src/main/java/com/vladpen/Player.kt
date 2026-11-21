@@ -13,11 +13,11 @@ interface Player {
     var mediaPlayer: MediaPlayer
     var volume: Int
 
-    fun initPlayer(context: Context, view: VLCVideoLayout, tcp: Boolean = true) {
+    fun initPlayer(context: Context, view: VLCVideoLayout, tcp: Boolean = true, audio: Boolean = true) {
         val options = arrayListOf(
             "--file-caching=300",
             "--live-caching=100",
-            "--network-caching=100",
+            "--network-caching=50",
             "--drop-late-frames",
             "--skip-frames",
             "--clock-jitter=0",
@@ -26,6 +26,9 @@ interface Player {
         )
         if (tcp)
             options.add("--rtsp-tcp")
+        // Without audio, video is no longer clocked against Android's audio output buffer
+        if (!audio)
+            options.add("--no-audio")
         if (!StreamData.logConnections)
             options.add("--verbose=-1")
 
@@ -54,6 +57,8 @@ interface Player {
 
     private fun startPlayback(media: Media) {
         try {
+            // Repeated per media, which takes precedence over the instance default
+            media.addOption(":network-caching=50")
             mediaPlayer.media = media
             play()
             media.release()
