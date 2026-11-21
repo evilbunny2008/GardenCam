@@ -23,7 +23,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.Insets
 import androidx.core.net.toUri
-import androidx.core.view.isVisible
 import com.vladpen.*
 import com.vladpen.Effects.edgeToEdge
 import com.vladpen.cams.databinding.ActivityStreamsBinding
@@ -160,9 +159,6 @@ class StreamsActivity : AppCompatActivity(), Layout {
         
         // Initialize ONVIF features
         initOnvifFeatures()
-        
-        // Run debug tests
-        runOnvifDebugTests()
     }
 
     private fun initFragments() {
@@ -276,16 +272,16 @@ class StreamsActivity : AppCompatActivity(), Layout {
                         binding.btnMic.visibility = View.VISIBLE
                         binding.btnMic.setOnTouchListener { v, event ->
                             when (event.action) {
-                                android.view.MotionEvent.ACTION_DOWN -> {
+                                MotionEvent.ACTION_DOWN -> {
                                     onMicPress()
                                     true
                                 }
-                                android.view.MotionEvent.ACTION_UP -> {
+                                MotionEvent.ACTION_UP -> {
                                     onMicRelease()
                                     v.performClick()
                                     true
                                 }
-                                android.view.MotionEvent.ACTION_CANCEL -> {
+                                MotionEvent.ACTION_CANCEL -> {
                                     onMicRelease()
                                     true
                                 }
@@ -667,48 +663,13 @@ class StreamsActivity : AppCompatActivity(), Layout {
         }
     }
 
-    private fun togglePTZControls() {
-        Log.d("ONVIF", "togglePTZControls called")
-        ptzControlView?.let { ptzView ->
-            Log.d("ONVIF", "PTZ control view exists, current visibility: ${ptzView.visibility}")
-            if (ptzView.isVisible) {
-                ptzView.hide()
-                Log.d("ONVIF", "Hiding PTZ controls")
-            } else {
-                ptzView.show()
-                Log.d("ONVIF", "Showing PTZ controls")
-            }
-        } ?: Log.d("ONVIF", "PTZ control view is null!")
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         onvifScope.cancel()
-        
-        if (!isGroup && streams.isNotEmpty()) {
-            val deviceId = StreamData.getById(streams[0])?.url
-            deviceId?.let {
-                onvifScope.launch {
-                    onvifManager?.unsubscribeFromMotionEvents(it)
-                }
-            }
-        }
-    }
 
-    private fun runOnvifDebugTests() {
-        Log.d("ONVIF", "Running ONVIF debug tests...")
-        val debugTester = ONVIFDebugTester(this)
-        debugTester.runAllTests()
-        
-        // Test with real camera if configured
         if (!isGroup && streams.isNotEmpty()) {
-            val stream = StreamData.getById(streams[0])
-            if (stream?.isOnvifDevice == true && stream.onvifServiceUrl != null) {
-                val credentials = stream.onvifCredentials
-                if (credentials != null) {
-                    Log.d("ONVIF", "Testing with real camera configuration...")
-                    debugTester.testRealCamera(stream.onvifServiceUrl, credentials.username, credentials.password)
-                }
+            StreamData.getById(streams[0])?.url?.let {
+                onvifManager?.releaseMotionEventService(it)
             }
         }
     }

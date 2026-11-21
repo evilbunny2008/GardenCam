@@ -96,57 +96,6 @@ class FileData(private val sftpUrl: String?) {
         sleep(300)
     }
 
-    fun getNext(remotePath: String, fwd: Boolean = true): String {
-        try {
-            val path = remotePath.split("/")
-
-            val currentName = path.last()
-            val parentPath = getParentPath(remotePath)
-
-            // Find a file in current folder
-            var files = getAll(parentPath)
-            val f = files.find { it.name == currentName }
-            val fid = files.indexOf(f)
-            if ((fid < files.count() - 1 && fwd) || (fid > 0 && !fwd)) {
-                val idx = if (fwd) fid + 1 else fid - 1
-                val newName = files[idx].name
-
-                remoteToCache(parentPath, newName)
-
-                return parentPath + newName
-            }
-
-            if (path.count() < 3)  // flat directory (no next folder)
-                return ""
-
-            // Find next/prev directory
-            val grandPath = getParentPath(parentPath)
-            val currentDir = path[path.count() - 2]
-            val dirs = getAll(grandPath)
-            val d = dirs.find { it.name == currentDir }
-            val did = dirs.indexOf(d)
-            if ((did > dirs.count() - 1 && fwd) || (did == 0 && !fwd)) {
-                return ""
-            }
-            val idx = if (fwd) did + 1 else did - 1
-            val newDir = grandPath + dirs[idx].name + "/"
-
-            // Find a file in next directory
-            files = getAll(newDir)
-            if (files.isEmpty())
-                return ""
-            val newName = if (fwd) files.first().name else files.last().name
-
-            remoteToCache(newDir, newName)
-
-            return newDir + newName
-
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return ""
-    }
-
     private fun connect() { // suspend
         val sftpData = Utils.parseUrl(sftpUrl, 22, "sftp") ?: return
 

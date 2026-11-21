@@ -186,8 +186,6 @@ class ONVIFStreamDiscovery {
     }
     
     private fun parseVideoConfiguration(profileNode: ONVIFResponse): VideoConfiguration {
-        val videoEncoder = profileNode.getProperty("VideoEncoderConfiguration")
-        
         val width = profileNode.getProperty("Resolution.Width")?.toIntOrNull() ?: 1920
         val height = profileNode.getProperty("Resolution.Height")?.toIntOrNull() ?: 1080
         val frameRate = profileNode.getProperty("RateControl.FrameRateLimit")?.toIntOrNull() ?: 25

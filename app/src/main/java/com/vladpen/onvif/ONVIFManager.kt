@@ -16,7 +16,6 @@ class ONVIFManager private constructor() {
     }
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-    private val deviceCache = ConcurrentHashMap<String, ONVIFDevice>()
     private val ptzControllers = ConcurrentHashMap<String, PTZController>()
     private val motionServices = ConcurrentHashMap<String, MotionEventService>()
     private val discovery = ONVIFDiscovery()
@@ -35,14 +34,7 @@ class ONVIFManager private constructor() {
 
     suspend fun discoverDevices(): List<ONVIFDevice> = withContext(Dispatchers.IO) {
         try {
-            val devices = discovery.discoverDevices()
-            
-            // Cache discovered devices
-            devices.forEach { device ->
-                deviceCache[device.deviceId] = device
-            }
-            
-            devices
+            discovery.discoverDevices()
         } catch (e: Exception) {
             emptyList()
         }
@@ -84,11 +76,8 @@ class ONVIFManager private constructor() {
         }
     }
 
-    fun getPTZController(deviceId: String): PTZController? {
-        return ptzControllers[deviceId]
-    }
-
     fun initializeMotionEventService(deviceId: String, serviceUrl: String, credentials: ONVIFCredentials?): MotionEventService? {
+        releaseMotionEventService(deviceId)
         return try {
             val service = MotionEventService(serviceUrl, credentials)
             service.setListener(object : MotionEventService.MotionEventListener {
@@ -108,40 +97,17 @@ class ONVIFManager private constructor() {
         }
     }
 
-    fun getMotionEventService(deviceId: String): MotionEventService? {
-        return motionServices[deviceId]
-    }
-
     suspend fun subscribeToMotionEvents(deviceId: String): Boolean {
         return motionServices[deviceId]?.subscribeToMotionEvents(deviceId) ?: false
     }
 
-    suspend fun unsubscribeFromMotionEvents(deviceId: String): Boolean {
-        return motionServices[deviceId]?.unsubscribeFromMotionEvents(deviceId) ?: false
-    }
-
-    fun getCachedDevice(deviceId: String): ONVIFDevice? {
-        return deviceCache[deviceId]
-    }
-
-    fun cacheDevice(device: ONVIFDevice) {
-        deviceCache[device.deviceId] = device
-    }
-
-    fun removeDevice(deviceId: String) {
-        deviceCache.remove(deviceId)
-        ptzControllers.remove(deviceId)?.let { 
-            // Cleanup PTZ controller if needed
+    // Runs on the manager's scope so the unsubscribe outlives the calling activity
+    fun releaseMotionEventService(deviceId: String) {
+        val service = motionServices.remove(deviceId) ?: return
+        scope.launch {
+            service.unsubscribeFromMotionEvents(deviceId)
+            service.cleanup()
         }
-        motionServices.remove(deviceId)?.cleanup()
-    }
-
-    fun cleanup() {
-        scope.cancel()
-        deviceCache.clear()
-        ptzControllers.clear()
-        motionServices.values.forEach { it.cleanup() }
-        motionServices.clear()
     }
 
     // Convenience methods for common operations
@@ -178,10 +144,13 @@ class ONVIFManager private constructor() {
         return ptzControllers[deviceId]?.zoom(direction, kotlin.math.abs(factor)) ?: false
     }
 
+    // Preset support, not yet wired into the UI
+    @Suppress("unused")
     suspend fun gotoPreset(deviceId: String, presetToken: String): Boolean {
         return ptzControllers[deviceId]?.gotoPreset(presetToken) ?: false
     }
 
+    @Suppress("unused")
     suspend fun setPreset(deviceId: String, name: String): String? {
         val success = ptzControllers[deviceId]?.setPreset(name) ?: false
         return if (success) name else null

@@ -133,14 +133,3 @@ data class PTZPosition(
     val pan: Float,
     val tilt: Float
 )
-
-data class PTZVector(
-    val pan: Float,
-    val tilt: Float,
-    val speed: Float = 1.0f  // Speed multiplier (0.1 to 1.0)
-)
-
-data class PTZVelocity(
-    val pan: Float,    // Velocity with speed applied
-    val tilt: Float    // Velocity with speed applied
-)

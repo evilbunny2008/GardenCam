@@ -71,27 +71,6 @@ interface Layout {
         }
     }
 
-    fun resizeVideo(layout: View) {
-        val (rootWidth, rootHeight) = getRootSize()
-
-        val frameWidth: Int
-        val frameHeight: Int
-        val rootAspectRatio = rootWidth.toFloat() / rootHeight.toFloat()
-        if (rootAspectRatio > ASPECT_RATIO) { // vertical margins
-            frameHeight = rootHeight
-            frameWidth = (frameHeight * ASPECT_RATIO).toInt()
-            hideBars = true
-        } else { // horizontal margins
-            frameWidth = rootWidth
-            frameHeight = (frameWidth / ASPECT_RATIO).toInt()
-            hideBars = false
-        }
-        val params = layout.layoutParams
-        params.width = frameWidth
-        params.height = frameHeight
-        layout.layoutParams = params
-    }
-
     private fun getRootSize(): Pair<Int, Int> {
         return Pair(
             rootView.width - (insets?.left ?: 0) - (insets?.right ?: 0),

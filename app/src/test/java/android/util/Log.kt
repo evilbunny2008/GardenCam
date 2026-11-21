@@ -1,6 +1,7 @@
 @file:JvmName("Log")
-// Test stub for android.util.Log: must return Int to match the real method signatures
-@file:Suppress("SameReturnValue")
+// Test stub for android.util.Log: called at runtime in place of the real class,
+// and must return Int to match the real method signatures
+@file:Suppress("SameReturnValue", "unused")
 
 package android.util
 

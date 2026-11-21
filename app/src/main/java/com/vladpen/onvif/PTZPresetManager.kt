@@ -12,6 +12,8 @@ data class PTZPreset(
     val presetToken: String
 )
 
+// Preset storage, not yet wired into the UI
+@Suppress("unused")
 object PTZPresetManager {
     private const val PRESETS_FILE_NAME = "ptz_presets.json"
     private var presets = mutableListOf<PTZPreset>()

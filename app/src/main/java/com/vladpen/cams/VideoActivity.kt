@@ -2,21 +2,24 @@ package com.vladpen.cams
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import com.vladpen.StreamData
+import com.vladpen.StreamDataModel
 import com.vladpen.cams.databinding.ActivityVideoBinding
-import com.vladpen.onvif.*
-import com.vladpen.*
-import kotlinx.coroutines.*
+import com.vladpen.onvif.FullscreenManager
+import com.vladpen.onvif.PTZController
+import com.vladpen.onvif.PTZGestureController
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import org.videolan.libvlc.LibVLC
 import org.videolan.libvlc.MediaPlayer
 
 class VideoActivity : AppCompatActivity() {
     private val binding by lazy { ActivityVideoBinding.inflate(layoutInflater) }
-    private val handler by lazy { Handler(Looper.getMainLooper()) }
 
     private lateinit var libVlc: LibVLC
     private lateinit var mediaPlayer: MediaPlayer

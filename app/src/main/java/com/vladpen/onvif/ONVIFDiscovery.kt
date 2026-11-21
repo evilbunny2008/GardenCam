@@ -154,15 +154,6 @@ class ONVIFDiscovery {
         }
     }
 
-    private fun extractCapabilityUrl(response: ONVIFResponse, capability: String): String? {
-        // Simplified capability URL extraction
-        return try {
-            response.getProperty(capability)
-        } catch (e: Exception) {
-            null
-        }
-    }
-
     private data class DeviceInfo(
         val name: String,
         val capabilities: DeviceCapabilities
