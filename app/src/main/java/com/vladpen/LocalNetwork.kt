@@ -1,13 +1,16 @@
 package com.vladpen
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
+import androidx.core.net.toUri
 
 // Android 17 (API 37) blocks LAN access (cameras, ONVIF, SFTP) until this runtime permission is granted
 object LocalNetwork {
+    // Inlined string constant, safe on older APIs; only checked when SDK_INT >= 37
+    @SuppressLint("InlinedApi")
     const val PERMISSION = Manifest.permission.ACCESS_LOCAL_NETWORK
 
     private val LOCAL_SUFFIXES = listOf(".local", ".lan", ".home", ".home.arpa", ".internal", ".localdomain")
@@ -30,7 +33,7 @@ object LocalNetwork {
         if (url.isNullOrBlank())
             return false
         val host = try {
-            Uri.parse(url).host
+            url.toUri().host
         } catch (_: Exception) {
             null
         } ?: return false

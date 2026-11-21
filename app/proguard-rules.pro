@@ -21,16 +21,19 @@
 #-renamesourcefileattribute SourceFile
 
 # ONVIF library rules
+#noinspection ExpensiveKeepRuleInspection
 -keep class org.apache.http.** { *; }
 -dontwarn org.apache.http.**
 # Keep line numbers so release crash stack traces stay readable
 -keepattributes SourceFile,LineNumberTable
 
 # libVLC: native code calls back into Java by name, and the AAR ships no rules
+#noinspection ExpensiveKeepRuleInspection
 -keep class org.videolan.libvlc.** { *; }
 -keep class org.videolan.medialibrary.** { *; }
 
 # JSch: algorithms are loaded by class name from its config
+#noinspection ExpensiveKeepRuleInspection
 -keep class com.jcraft.jsch.** { *; }
 -dontwarn com.jcraft.jsch.**
 -dontwarn org.bouncycastle.**
