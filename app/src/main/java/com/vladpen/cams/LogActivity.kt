@@ -124,7 +124,9 @@ class LogActivity: AppCompatActivity() {
         val label = getString(R.string.logs)
         val clipboardManager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
         val clipData = ClipData.newPlainText(label, textToCopy)
-        clipboardManager.primaryClip = clipData
+        // primaryClip is read-only in Kotlin (nullable getter, non-null setter), so the setter is needed
+        @Suppress("UsePropertyAccessSyntax")
+        clipboardManager.setPrimaryClip(clipData)
         Effects.fadeOut(arrayOf(binding.toolbar.btnLink))
     }
 }
