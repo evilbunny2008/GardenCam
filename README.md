@@ -276,23 +276,19 @@ and server: [habr.com/ru/post/597363](https://habr.com/ru/post/597363/).
 
 ## Version Codes
 
-Format: `XXYYZZZZ` where:
-- `XX` = Major version (01)
-- `YY` = Minor version (01)
-- `ZZZZ` = Patch version + 4 for base (e.g., patch 8 → 0134 + 4 = 0138 → 10101380)
+Garden Cam restarted its versioning at `versionName` 0.0.1, `versionCode` 1.
+Increase `versionCode` by 1 for each release; the build turns it into one code per APK:
 
-Architecture offsets from base:
-- armeabi-v7a: base - 3
-- arm64-v8a: base - 2
-- x86: base - 1
-- x86_64: base (highest)
+| Output                 | versionCode            | Example for versionCode 1 |
+|------------------------|------------------------|---------------------------|
+| App Bundle (no splits) | versionCode × 10       | 10                        |
+| armeabi-v7a            | versionCode × 10 + 1   | 11                        |
+| arm64-v8a              | versionCode × 10 + 2   | 12                        |
+| x86                    | versionCode × 10 + 3   | 13                        |
+| x86_64                 | versionCode × 10 + 4   | 14                        |
 
-Example for v2.4.9:
-- Base: 10101356 (01 01 0135 + 6 for next patch)
-- armeabi-v7a: 10101353
-- arm64-v8a: 10101354
-- x86: 10101355
-- x86_64: 10101356
+Release notes go in `fastlane/metadata/android/en-US/changelogs/<code>.txt`, one file for each of
+these codes (500 characters at most).
 
 *Copyright © 2026 evilbunny2008, © 2026 Mark Retallack, © 2022-2025 vladpen, under the MIT license.
 Use it with absolutely no warranty.*

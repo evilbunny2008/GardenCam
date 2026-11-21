@@ -1,4 +1,6 @@
-## Garden Cam fork (2.5.3, unreleased)
+## 0.0.1 - unreleased (Garden Cam fork)
+
+Versioning restarted at 0.0.1 (versionCode 1) for the fork.
 
 Forked from [ONVIF Camera](https://github.com/mretallack/cams) 2.5.0 by Mark Retallack
 (itself a fork of [Cams](https://github.com/vladpen/cams) by vladpen). Changes since forking:
