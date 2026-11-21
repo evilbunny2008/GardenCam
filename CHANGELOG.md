@@ -1,3 +1,9 @@
+## 0.0.2 - unreleased
+
+### Fixes
+- The About screen scrolls, so the credits, the issue tracker link and **Device logs** can be reached
+  in landscape.
+
 ## 0.0.1 - unreleased (Garden Cam fork)
 
 Versioning restarted at 0.0.1 (versionCode 1) for the fork. Each release increases versionCode by 1;
