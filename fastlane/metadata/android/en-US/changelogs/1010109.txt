@@ -1,4 +1,0 @@
-- Cameras and groups: manual sorting
-- URL transcoding: critical error fix
-- Enhanced security
-- Tweaks and improvements

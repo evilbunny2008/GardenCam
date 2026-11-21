@@ -1,2 +1,0 @@
-- Switching channels on group screens
-- Improved loading bar

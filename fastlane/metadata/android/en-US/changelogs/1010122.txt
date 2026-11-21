@@ -1,3 +1,0 @@
-- Components update
-- Adaptive app icon
-- Polish localization

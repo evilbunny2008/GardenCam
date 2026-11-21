@@ -1,3 +1,0 @@
-- Video bars auto hiding
-- Clickable header in files mode
-- Improved navigation

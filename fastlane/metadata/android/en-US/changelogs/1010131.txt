@@ -1,2 +1,0 @@
-- Android 16 support
-- Export/import on Android TV (requires file manager)

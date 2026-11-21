@@ -1,2 +1,0 @@
-- Export/import: password confirmation and current date in the file name
-- Fixes and improvements

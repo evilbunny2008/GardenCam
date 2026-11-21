@@ -1,1 +1,0 @@
-Network connection alert visibility fix

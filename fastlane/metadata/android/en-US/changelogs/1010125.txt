@@ -1,3 +1,0 @@
-- Playback speed bug fix
-- Link to user manual
-- Components update

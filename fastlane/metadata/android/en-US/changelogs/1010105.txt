@@ -1,3 +1,0 @@
-- SFTP browser
-- The mute button
-- Tweaks and improvements
