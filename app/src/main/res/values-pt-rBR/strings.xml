@@ -1,6 +1,6 @@
 <!--suppress GrazieStyle -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name" tools:ignore="Typos">ONVIF Camera</string>
+    <string name="app_name" tools:ignore="Typos">Garden Cam</string>
     <string name="main_title">Câmeras</string>
     <string name="cam_add">Adicionar câmera</string>
     <string name="cam_name">Nome *</string>
@@ -59,17 +59,22 @@
     <string name="import_password">Password specified during export:</string>
     <string name="btn_continue">Continue</string>
     <string name="about">About</string>
-    <string name="about_text">
+    <string name="about_text" tools:ignore="Typos">
         <![CDATA[
-            <h1>Cams, version %1$s</h1><br/>
-            Copyright &copy; %2$s vladpen under MIT license<br/><br/>
-            <a href="https://github.com/vladpen/cams">Home page</a><br/><br/>
-            <a href="https://github.com/vladpen/cams/issues">
-                Bug reports and issue tracker</a>
+            <h1>Garden Cam, versão %1$s</h1><br/>
+            <b>Fork do ONVIF Camera (Mark Retallack), que por sua vez é um fork do Cams (vladpen)</b><br/><br/>
+            Mantido por evilbunny2008<br/>
+            <a href="https://github.com/evilbunny2008/cams">Página inicial</a><br/><br/>
+            Fork anterior: <a href="https://github.com/mretallack/cams">https://github.com/mretallack/cams</a><br/>
+            Aplicativo original: <a href="https://github.com/vladpen/cams">https://github.com/vladpen/cams</a><br/><br/>
+            Copyright &copy; %2$s evilbunny2008, Mark Retallack, vladpen<br/>
+            Licenciado sob a licença MIT<br/><br/>
+            <a href="https://github.com/evilbunny2008/cams/issues">
+                Relatórios de bugs e rastreador de problemas</a>
         ]]>
     </string>
     <string name="manual_link">
-        <![CDATA[<a href="https://github.com/vladpen/cams/">User manual</a>]]>
+        <![CDATA[<a href="https://github.com/evilbunny2008/cams#readme">Manual do usuário</a>]]>
     </string>
     <string name="copy">Copy</string>
     <string name="paste">Paste</string>

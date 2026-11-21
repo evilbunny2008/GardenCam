@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="center" />
 
-    <com.vladpen.onvif.TouchGestureOverlay
+    <com.odiousapps.gardencam.onvif.TouchGestureOverlay
         android:id="@+id/ptzOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

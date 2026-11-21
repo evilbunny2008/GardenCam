@@ -1,8 +1,12 @@
 # License Information
 
-## ONVIF Camera
+## Garden Cam
 
-Copyright © 2026 Mark Retallack  
+Garden Cam is a fork of [ONVIF Camera](https://github.com/mretallack/cams) by Mark Retallack,
+which is itself a fork of [Cams](https://github.com/vladpen/cams) by vladpen.
+
+Copyright © 2026 evilbunny2008 (Garden Cam)  
+Copyright © 2026 Mark Retallack (ONVIF Camera)  
 Copyright © 2022 vladpen (original Cams app)
 
 This project is licensed under the MIT License - see below for details.
@@ -48,18 +52,12 @@ This application uses the following open-source libraries:
 - **Apache HttpComponents (httpclient-android)** - Apache License 2.0
   - https://hc.apache.org/
 
-### Testing Libraries
-- **JUnit** - Eclipse Public License 1.0
-- **Mockito** - MIT License
-- **Espresso** - Apache License 2.0
-
 ## License Compatibility
 
 All dependencies are compatible with the MIT License under which this project is distributed:
 - Apache License 2.0: Compatible
 - LGPL 2.1+: Compatible (dynamic linking)
 - BSD-style: Compatible
-- EPL 1.0: Compatible (test-only dependency)
 
 ## Full License Texts
 
@@ -71,6 +69,3 @@ https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 
 ### BSD License
 https://opensource.org/licenses/BSD-3-Clause
-
-### Eclipse Public License 1.0
-https://www.eclipse.org/legal/epl-v10.html

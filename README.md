@@ -1,13 +1,37 @@
-## ONVIF Camera
+## Garden Cam
 
-> **Note**: This is a fork of the [original cams repository](https://github.com/vladpen/cams) with enhanced ONVIF features including automatic stream discovery and touch-based PTZ control.
+> **Note**: Garden Cam is a fork of [ONVIF Camera](https://github.com/mretallack/cams) by Mark Retallack,
+> which is itself a fork of the original [Cams](https://github.com/vladpen/cams) app by vladpen.
+> It was forked to remotely view plants in a garden through a PTZ camera, so it focuses on
+> keeping the picture in step with pan/tilt/zoom movements.
 
-**Package ID**: `com.odiousapps.onvifcamera`  
-**Original Package**: `com.vladpen.cams`
+**Package ID**: `com.odiousapps.gardencam`  
+**Forked from**: ONVIF Camera 2.5.0 (`uk.org.retallack.onvifcamera`)  
+**Original app**: Cams (`com.vladpen.cams`)
 
-This fork can be installed alongside the original Cams app without conflicts.
+Garden Cam can be installed alongside both Cams and ONVIF Camera. They don't share settings:
+use **Export settings** in the old app's main menu, then import the file into Garden Cam.
 
 ![Cams](https://raw.githubusercontent.com/vladpen/cams/main/fastlane/metadata/android/ru-RU/images/phoneScreenshots/5_cover.jpg)
+
+## Changes Since Forking
+
+Compared with ONVIF Camera 2.5.0, Garden Cam:
+
+- **Is renamed** to Garden Cam, with application ID `com.odiousapps.gardencam` and Kotlin packages
+  `com.odiousapps.gardencam` / `com.odiousapps.gardencam.onvif`.
+- **Reduces latency** for PTZ cameras: smaller network cache, no audio on PTZ streams, and a
+  one-tap encoder tuning action (see [Low Latency](#low-latency)).
+- **Encrypts ONVIF credentials properly**, with AES-256-GCM and a key held in the Android Keystore.
+- **Targets Android 17**, including its local network permission, with updated build tools and libraries.
+- **Ships smaller release builds**, minified and shrunk with R8.
+- **Drops debug code** that contacted httpbin.org and the camera every time a stream opened.
+- **Fixes motion-event clean-up**, so subscriptions are released and polling doesn't leak.
+- **Prefers ContinuousMove** for PTZ, falling back to RelativeMove (for example on Thingino cameras).
+- **No longer includes** the test suites, the GitHub Actions CI workflow, or the recording player's
+  previous/next/seek bar.
+
+See [CHANGELOG.md](CHANGELOG.md) for the full list.
 
 Simple Android mobile application for playing RTSP streams from IP cameras.
 
@@ -56,7 +80,7 @@ The app uses **VLC for Android (libvlc)** as its video playback engine, providin
 - Robust network error handling and reconnection
 - Multi-format codec support
 
-VLC library is obtained from Maven Central: `org.videolan.android:libvlc-all:3.6.5`  
+VLC library is obtained from Maven Central: `org.videolan.android:libvlc-all:3.7.7`  
 License: LGPL 2.1+ / GPL 2.0+ - See [VideoLAN Legal](https://www.videolan.org/legal.html)
 
 *IMPORTANT. The application is focused on security and data privacy, so it does not collect or process any user information.
@@ -64,10 +88,22 @@ Data is not sent to any servers, including Google's technical infrastructure and
 
 ## Installation
 
-APK file can be built yourself, [downloaded from GitHub](https://github.com/vladpen/cams/raw/main/app/release/app-armeabi-v7a-release.apk),
-installed using [F-Droid](https://f-droid.org/ru/packages/com.vladpen.cams/) (32-bit platforms only)
-or [RuStore](https://www.rustore.ru/catalog/app/com.vladpen.cams).
-Supports armeabi-v7a architecture (used in most modern mobile phones), arm64-v8a, x86-64 and x86.
+Build the APK yourself:
+
+```bash
+./gradlew assembleRelease
+```
+
+APKs are written to `app/build/outputs/apk/release/` for armeabi-v7a, arm64-v8a, x86 and x86_64
+(`gardencam-<abi>-release-unsigned.apk`). The build has no signing configuration, so sign the APK
+before installing it:
+
+```bash
+apksigner sign --ks release.keystore --out gardencam-arm64-v8a-release.apk \
+    app/build/outputs/apk/release/gardencam-arm64-v8a-release-unsigned.apk
+```
+
+For a quick test on a device, `./gradlew installDebug` installs a debug build instead.
 
 ## Configuration
 
@@ -104,7 +140,7 @@ For example, the screenshots above use icons from the standard mobile phone set.
 
 ## ONVIF Setup
 
-This fork includes enhanced ONVIF support for automatic camera discovery, stream configuration, and PTZ control.
+ONVIF support (from the ONVIF Camera fork) covers for automatic camera discovery, stream configuration, and PTZ control.
 
 ### Adding ONVIF Cameras
 
@@ -154,6 +190,7 @@ In the camera edit screen, you can configure:
 - **Invert Horizontal PTZ**: Reverse left/right movement direction
 - **Invert Vertical PTZ**: Reverse up/down movement direction  
 - **PTZ Rate Limit**: Minimum milliseconds between PTZ commands (default: 200ms)
+- **Tune camera for low latency**: Reconfigures the camera's encoders over ONVIF (see [Low Latency](#low-latency))
 
 These settings are saved per-camera and persist across app restarts.
 
@@ -210,6 +247,23 @@ Thingino cameras have specific ONVIF requirements:
 - If streams don't authenticate, the app will automatically add credentials from ONVIF URL
 - After firmware updates, PTZ behavior may change - RelativeMove is currently the only supported method
 
+## Low Latency
+
+PTZ is much easier to use when the picture follows the camera's movement closely. Garden Cam:
+
+- Uses a 50 ms network cache for live streams.
+- Disables audio on PTZ-capable streams (those with an ONVIF URL and credentials). Without audio,
+  video isn't timed against Android's audio output buffer, which can add 100–300 ms. Those streams
+  don't show a mute button; talk-back still works.
+- Offers **Tune camera for low latency** in the camera editor. It uses ONVIF to set every
+  video encoder to the H.264 Baseline profile (which has no B-frames) and, where the camera
+  supports ONVIF Media2, constant bitrate. It then reads the settings back and reports what the
+  camera actually kept. This changes the camera's own settings, so it also affects anything else
+  that records from it.
+
+For the lowest latency, also turn off any vendor "smart" codec (H.264+/H.265+, Smart Codec, ZeroGOP)
+in the camera's web interface, because ONVIF can't control it. Use UDP if your network is reliable.
+
 ## Motion Detection Alerts
 
 Optionally, the application can notify about camera motion detector triggers.
@@ -220,155 +274,7 @@ These settings are described in detail in the parallel project [Cams-PWA](https:
 Detailed discussion of the application: [habr.com/ru/post/654915](https://habr.com/ru/post/654915/)
 and server: [habr.com/ru/post/597363](https://habr.com/ru/post/597363/).
 
-[<img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
-alt="Get it on GitHub"
-height="80">](https://github.com/vladpen/cams/tree/main/app/release)
-[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
-alt="Get it on F-Droid"
-height="80">](https://f-droid.org/packages/com.vladpen.cams/)
-
-&nbsp; [<img src="https://user-images.githubusercontent.com/3853013/194689050-e6da2f21-9aa3-4662-9b7d-7293b140f22f.svg"
-alt="Доступно в RuStore"
-height="57">](https://apps.rustore.ru/app/com.vladpen.cams)
-
-## CI/CD Pipeline
-
-The project uses GitHub Actions (`.github/workflows/android-ci.yml`) for continuous integration and release distribution.
-
-### Triggers
-
-- **Push/PR to `main` or `dev`**: Runs build, lint, and unit tests
-- **GitHub Release published**: Builds signed APKs and distributes via Firebase
-
-### Jobs
-
-| Job     | Trigger        | Description                                                                                |
-|---------|----------------|--------------------------------------------------------------------------------------------|
-| build   | push/PR        | Assembles debug APKs, uploads as artifacts                                                 |
-| lint    | push/PR        | Runs Android lint (non-blocking)                                                           |
-| test    | push/PR        | Runs unit tests                                                                            |
-| release | GitHub Release | Builds signed release APKs, attaches to release, distributes arm64 APK to Firebase testers |
-
-### GitHub Secrets Required
-
-| Secret                     | Description                                                            |
-|----------------------------|------------------------------------------------------------------------|
-| `KEYSTORE_BASE64`          | Release keystore, base64-encoded (`base64 -w 0 release.keystore`)      |
-| `KEYSTORE_PASSWORD`        | Keystore password                                                      |
-| `KEY_ALIAS`                | Key alias (e.g. `cams`)                                                |
-| `KEY_PASSWORD`             | Key password                                                           |
-| `FIREBASE_APP_ID`          | Firebase App ID (from Firebase Console → Project Settings → Your Apps) |
-| `FIREBASE_SERVICE_ACCOUNT` | Firebase service account JSON with App Distribution Admin role         |
-
-### Signing Configuration
-
-Release builds are signed via environment variables in `app/build.gradle`. When `KEYSTORE_PATH` is set (CI), the release signing config is used. Locally, it falls back to debug signing.
-
-To generate a new keystore:
-```bash
-keytool -genkey -v -keystore release.keystore -alias cams -keyalg RSA -keysize 2048 -validity 10000
-```
-
-To push secrets using `gh` CLI:
-```bash
-base64 -w 0 release.keystore | gh secret set KEYSTORE_BASE64 -R mretallack/cams
-echo -n "<password>" | gh secret set KEYSTORE_PASSWORD -R mretallack/cams
-echo -n "cams" | gh secret set KEY_ALIAS -R mretallack/cams
-echo -n "<password>" | gh secret set KEY_PASSWORD -R mretallack/cams
-gh secret set FIREBASE_SERVICE_ACCOUNT -R mretallack/cams < service-account.json
-echo -n "<app-id>" | gh secret set FIREBASE_APP_ID -R mretallack/cams
-```
-
-### Firebase App Distribution
-
-Signed arm64-v8a APKs are distributed to the `testers` group in Firebase App Distribution on each release. To manage testers, go to Firebase Console → App Distribution → Testers & Groups.
-
-## Release Procedure
-
-### Prerequisites
-
-1. Ensure you're on the `main` branch and it's up to date:
-   ```bash
-   git checkout main
-   git fetch origin
-   git status  # Should show "up to date with origin/main"
-   ```
-
-2. Ensure all feature branches are merged:
-   ```bash
-   git log main..fixes --oneline  # Should be empty if fixes is merged
-   ```
-
-### Version Update
-
-1. Update version in `app/build.gradle`:
-   - Increment `versionCode` by 6 (e.g., 10101350 → 10101356)
-   - Update `versionName` (e.g., '2.4.8' → '2.4.9')
-
-2. Update `CHANGELOG.md`:
-   - Add new version section at the top with date
-   - List all changes since last release
-
-3. Commit changes:
-   ```bash
-   git add app/build.gradle CHANGELOG.md
-   git commit -m "Release vX.Y.Z: Brief description"
-   ```
-
-### Create Release
-
-1. Create and push tag:
-   ```bash
-   git tag -a vX.Y.Z -m "Release vX.Y.Z: Brief description"
-   git push origin main
-   git push origin vX.Y.Z
-   ```
-
-2. Create a GitHub Release from the tag at:
-   https://github.com/mretallack/cams/releases/new
-   
-   This triggers the CI release job which:
-   - Builds signed APKs for all 4 architectures
-   - Attaches them to the GitHub Release
-   - Distributes the arm64 APK to Firebase testers
-
-### Update F-Droid
-
-1. Switch to fdroiddata repository:
-   ```bash
-   cd /home/mark/git/fdroiddata
-   ```
-
-2. Ensure branches are up to date:
-   ```bash
-   git checkout master
-   git fetch upstream
-   git merge upstream/master --ff-only
-   git push origin master
-   ```
-
-3. Update package branch:
-   ```bash
-   git checkout add-onvifcamera-v2
-   git rebase upstream/master
-   ```
-
-4. Update `metadata/com.odiousapps.onvifcamera.yml`:
-   - Add four new build entries (one per architecture: armeabi-v7a, arm64-v8a, x86, x86_64)
-   - Version codes: base-3, base-2, base-1, base (e.g., 10101347, 10101348, 10101349, 10101350)
-   - Update `CurrentVersion` and `CurrentVersionCode` at bottom
-   - Builds must be in ascending version code order
-
-5. Commit and push:
-   ```bash
-   git add metadata/com.odiousapps.onvifcamera.yml
-   git commit -m "Update ONVIF Camera to vX.Y.Z - Brief description"
-   git push origin add-onvifcamera-v2 --force-with-lease
-   ```
-
-6. Monitor CI pipeline at: https://gitlab.com/Retallack/fdroiddata/-/pipelines
-
-### Version Code Calculation
+## Version Codes
 
 Format: `XXYYZZZZ` where:
 - `XX` = Major version (01)
@@ -388,7 +294,8 @@ Example for v2.4.9:
 - x86: 10101355
 - x86_64: 10101356
 
-*Copyright © 2022-2025 vladpen under MIT license. Use it with absolutely no warranty.*
+*Copyright © 2026 evilbunny2008, © 2026 Mark Retallack, © 2022-2025 vladpen, under the MIT license.
+Use it with absolutely no warranty.*
 
 
 ## TODO / Configuration

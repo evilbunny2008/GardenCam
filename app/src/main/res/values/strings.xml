@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ONVIF Camera</string>
+    <string name="app_name">Garden Cam</string>
     <string name="main_title">Cameras</string>
     <string name="cam_add">Add camera</string>
     <string name="cam_name">Name *</string>
@@ -58,20 +58,20 @@
     <string name="about">About</string>
     <string name="about_text">
         <![CDATA[
-            <h1>ONVIF Camera, version %1$s</h1><br/>
-            <b>Fork of Cams with ONVIF PTZ Control</b><br/><br/>
-            Forked and maintained by Mark Retallack<br/>
-            <a href="https://github.com/mretallack/cams">https://github.com/mretallack/cams</a><br/><br/>
-            Original Cams app by vladpen<br/>
-            <a href="https://github.com/vladpen/cams">https://github.com/vladpen/cams</a><br/><br/>
-            Copyright &copy; %2$s Mark Retallack, vladpen<br/>
+            <h1>Garden Cam, version %1$s</h1><br/>
+            <b>Forked from ONVIF Camera by Mark Retallack, itself a fork of Cams by vladpen</b><br/><br/>
+            Maintained by evilbunny2008<br/>
+            <a href="https://github.com/evilbunny2008/cams">https://github.com/evilbunny2008/cams</a><br/><br/>
+            Previous fork: <a href="https://github.com/mretallack/cams">https://github.com/mretallack/cams</a><br/>
+            Original app: <a href="https://github.com/vladpen/cams">https://github.com/vladpen/cams</a><br/><br/>
+            Copyright &copy; %2$s evilbunny2008, Mark Retallack, vladpen<br/>
             Licensed under MIT license<br/><br/>
-            <a href="https://github.com/mretallack/cams/issues">
+            <a href="https://github.com/evilbunny2008/cams/issues">
                 Bug reports and issue tracker</a>
         ]]>
     </string>
     <string name="manual_link">
-        <![CDATA[<a href="https://github.com/vladpen/cams/">User manual</a>]]>
+        <![CDATA[<a href="https://github.com/evilbunny2008/cams#readme">User manual</a>]]>
     </string>
     <string name="copy">Copy</string>
     <string name="paste">Paste</string>

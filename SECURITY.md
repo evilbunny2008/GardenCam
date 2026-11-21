@@ -2,7 +2,7 @@
 
 ## Overview
 
-ONVIF Camera (fork of Cams) is designed with security and privacy as core principles. This document outlines the security measures, known issues, and recommendations for secure usage.
+Garden Cam (a fork of [ONVIF Camera](https://github.com/mretallack/cams), itself a fork of [Cams](https://github.com/vladpen/cams)) is designed with security and privacy as core principles. This document outlines the security measures, known issues, and recommendations for secure usage.
 
 ## Security Principles
 
@@ -10,41 +10,32 @@ ONVIF Camera (fork of Cams) is designed with security and privacy as core princi
 2. **Local Storage Only**: All configuration and credentials are stored locally on the device
 3. **No Analytics**: No Google Analytics, Firebase, or third-party tracking services
 4. **No Cloud Services**: Direct camera connections only - no manufacturer cloud services
-5. **Encrypted Credentials**: ONVIF and SFTP credentials are encrypted using AES-256
+5. **Encrypted Credentials**: ONVIF credentials are encrypted with AES-256-GCM using an Android Keystore key
 
 ## Supported Versions
 
-| Version | Supported          | Status              |
-|---------|--------------------|---------------------|
-| 2.4.5   | :white_check_mark: | Current release     |
-| 2.4.4   | :x:                | Superseded          |
-| < 2.4.4 | :x:                | No longer supported |
+| Version | Supported          | Status                         |
+|---------|--------------------|--------------------------------|
+| 2.5.3   | :white_check_mark: | Current Garden Cam development |
+| < 2.5.3 | :x:                | Earlier ONVIF Camera releases  |
 
 ## Third-Party Dependencies
 
 ### Core Dependencies
 
-#### VLC for Android (libvlc-all) - Version 3.6.5
+#### VLC for Android (libvlc-all) - Version 3.7.7
 - **License**: LGPL 2.1+ / GPL 2.0+
 - **Purpose**: Video playback engine for RTSP/RTMP streams
-- **Status**: ✅ **CURRENT** - Latest stable Android release (May 2025)
-- **Version Notes**: 
-  - Android VLC uses 3.6.x branch (currently 3.6.5)
-  - Desktop VLC uses 3.0.x branch (currently 3.0.22/3.0.23)
-  - Android version is newer and maintained separately
-  - Security fixes from desktop 3.0.22 (CVE-2025-51602) likely already included or not applicable
-- **Risk Level**: LOW - Latest stable version, trusted camera sources only
-- **Mitigation**: Only connect to trusted camera sources
-- **Recommendation**: Monitor for 3.6.6 or 3.7.0 stable release
+- **Risk Level**: LOW - Only connect to trusted camera sources
+- **Recommendation**: Keep up to date with libvlc-android releases
 
 #### AndroidX Libraries
-- **androidx.core:core-ktx**: 1.17.0 (Latest as of Jan 2026) ✅
-- **androidx.appcompat:appcompat**: 1.7.1 (Current) ✅
-- **androidx.work:work-runtime-ktx**: 2.10.5 (Current) ✅
-- **androidx.activity:activity-ktx**: 1.11.0 (Current) ✅
-- **com.google.android.material:material**: 1.13.0 (Current) ✅
+- **androidx.core:core-ktx**: 1.19.1
+- **androidx.appcompat:appcompat**: 1.8.0
+- **androidx.work:work-runtime-ktx**: 2.12.0
+- **androidx.activity:activity-ktx**: 1.13.0
+- **com.google.android.material:material**: 1.14.0
 - **License**: Apache 2.0
-- **Status**: All dependencies are current and maintained
 
 #### Apache HttpClient Android - Version 4.3.5.1
 - **License**: Apache 2.0
@@ -62,32 +53,29 @@ ONVIF Camera (fork of Cams) is designed with security and privacy as core princi
   - TLS validation performed by Android platform
 - **Recommendation**: Migrate to OkHttp or HttpClient 5.x in future release
 
-#### JSch (SSH/SFTP) - Version 2.27.2
+#### JSch (SSH/SFTP) - Version 2.28.8
 - **License**: BSD-style
 - **Purpose**: SFTP file access for camera recordings
 - **Status**: ✅ **CURRENT** - Maintained fork by mwiede
 - **Security**: Actively maintained with security updates
 - **Notes**: This is the community-maintained fork (com.github.mwiede:jsch)
 
-#### Gson - Version 2.13.1
+#### Gson - Version 2.15.0
 - **License**: Apache 2.0
 - **Purpose**: JSON serialization for app settings
 - **Status**: ✅ **CURRENT** - Latest stable release
 - **Security**: No known vulnerabilities
 
-### Test Dependencies
-- **junit:junit**: 4.13.2 ✅
-- **mockito:mockito-core**: 4.6.1 ✅
-- **androidx.test.ext:junit**: 1.3.0 ✅
-- **androidx.test.espresso:espresso-core**: 3.7.0 ✅
-
 ## Security Features
 
 ### Credential Storage
-- **ONVIF Credentials**: Encrypted using AES-256-ECB with device-specific key
-- **SFTP Passwords**: Base64 encoded (legacy, should be upgraded)
-- **Storage Location**: Android SharedPreferences (private to app)
-- **Key Management**: Encryption key stored in secure SharedPreferences
+- **ONVIF Credentials**: AES-256-GCM, key generated in and never leaving the Android Keystore.
+  Credentials saved by older versions are re-encrypted on first load and the old key is deleted.
+- **RTSP/SFTP Passwords**: AES-CBC with a key derived from the app's UID and install time
+  (inherited from Cams). This deters casual reading but is not strong protection.
+- **Settings Exports**: Credentials are written in a device-independent form, and the export
+  file is protected by its own password.
+- **Storage Location**: App-private storage
 
 ### Network Security
 - **RTSP Streams**: Supports both TCP and UDP protocols
@@ -98,19 +86,21 @@ ONVIF Camera (fork of Cams) is designed with security and privacy as core princi
 
 ### Input Validation
 - **URL Sanitization**: Basic validation and sanitization of camera URLs
-- **XML Injection Protection**: ONVIF responses sanitized to remove script tags
+- **XML Injection Protection**: ONVIF responses sanitized to remove script tags; encoder
+  settings responses are parsed with DOCTYPE declarations (and so external entities) rejected
 - **Length Limits**: Input fields limited to 1000 characters
 - **Special Character Filtering**: Removes `<>&"'` from ONVIF inputs
 
 ### Android Security
 - **Minimum SDK**: 24 (Android 7.0 Nougat)
-- **Target SDK**: 36 (Android 14+)
-- **Permissions**: 
-  - INTERNET (required for camera streams)
-  - CHANGE_WIFI_MULTICAST_STATE (for ONVIF discovery)
-  - FOREGROUND_SERVICE (for motion detection alerts)
-  - POST_NOTIFICATIONS (for alerts)
-- **No Dangerous Permissions**: No access to contacts, location, camera, microphone, etc.
+- **Target SDK**: 37 (Android 17)
+- **Permissions**:
+  - INTERNET (camera streams)
+  - ACCESS_LOCAL_NETWORK (Android 17+: reaching cameras on the LAN; requested at runtime)
+  - POST_NOTIFICATIONS (motion detection alerts)
+  - RECORD_AUDIO (push-to-talk backchannel audio; requested at runtime)
+  - VIBRATE (haptic feedback)
+- **No Other Dangerous Permissions**: No access to contacts, location or the phone's camera
 
 ## Known Security Limitations
 
@@ -123,22 +113,17 @@ ONVIF Camera (fork of Cams) is designed with security and privacy as core princi
 - Android platform provides TLS validation
 **Recommendation**: Migrate to modern HTTP client in future release
 
-### 2. Credential Encryption (LOW RISK)
-**Issue**: AES-ECB mode used instead of AES-GCM or AES-CBC
-**Impact**: ECB mode can leak patterns in encrypted data
-**Mitigation**: 
-- Credentials are short strings (username:password)
-- Pattern leakage minimal for credential-length data
-- Key stored securely in app-private storage
-**Recommendation**: Migrate to AES-GCM in future release
+### 2. Credential Encryption (RESOLVED)
+ONVIF credentials previously used `AES/ECB/PKCS1Padding`, which isn't a valid AES transformation, so
+they silently fell back to Base64. Garden Cam encrypts them with AES-256-GCM and an Android Keystore key.
 
-### 3. SFTP Password Encoding (MEDIUM RISK)
-**Issue**: SFTP passwords stored as Base64 (encoding, not encryption)
-**Impact**: Passwords readable if device storage compromised
-**Mitigation**: 
+### 3. RTSP/SFTP Password Encryption (MEDIUM RISK)
+**Issue**: Passwords are encrypted with AES-CBC, but the key is derived from the app's UID and install time
+**Impact**: Someone with a copy of the app's data and the install time could decrypt them
+**Mitigation**:
 - Android app storage is private by default
 - Requires root access or device compromise to read
-**Recommendation**: Migrate to encrypted storage like ONVIF credentials
+**Recommendation**: Move these to the Android Keystore, like ONVIF credentials
 
 ### 4. Cleartext Traffic Permitted (BY DESIGN)
 **Issue**: App allows HTTP connections (not HTTPS only)
@@ -193,13 +178,11 @@ We will respond within 48 hours and work to address confirmed vulnerabilities pr
 
 ### Planned Improvements
 1. **Migrate HTTP Client**: Replace Apache HttpClient with OkHttp
-2. **Improve Encryption**: Migrate to AES-GCM for credential storage
-3. **Encrypt SFTP Passwords**: Use same encryption as ONVIF credentials
-4. **Certificate Pinning**: Add optional certificate pinning for ONVIF
-5. **Security Audit**: Conduct third-party security audit
+2. **Encrypt RTSP/SFTP Passwords**: Use the same Keystore encryption as ONVIF credentials
+3. **Certificate Pinning**: Add optional certificate pinning for ONVIF
+4. **Security Audit**: Conduct third-party security audit
 
 ### Future Considerations
-- Hardware-backed keystore for credential encryption (Android Keystore)
 - Biometric authentication for app access
 - Network traffic analysis/anomaly detection
 - Secure element support for credential storage
@@ -229,6 +212,11 @@ All dependencies use permissive open-source licenses (MIT, Apache 2.0, BSD, LGPL
 
 ## Changelog
 
+- **2026-11-21**: Updated for the Garden Cam fork
+  - ONVIF credentials moved to AES-256-GCM with an Android Keystore key
+  - Corrected the description of RTSP/SFTP password storage
+  - Updated dependency versions, target SDK and permissions
+  - Removed test dependencies (test suites removed)
 - **2026-01-24**: Initial security policy created
   - Documented all dependencies and versions
   - Clarified VLC Android 3.6.5 is newer than desktop 3.0.22
@@ -237,5 +225,5 @@ All dependencies use permissive open-source licenses (MIT, Apache 2.0, BSD, LGPL
 
 ---
 
-*Last Updated: 2026-01-24*  
-*Version: 2.4.5*
+*Last Updated: 2026-11-21*  
+*Version: 2.5.3*

@@ -1,3 +1,54 @@
+## Garden Cam fork (2.5.3, unreleased)
+
+Forked from [ONVIF Camera](https://github.com/mretallack/cams) 2.5.0 by Mark Retallack
+(itself a fork of [Cams](https://github.com/vladpen/cams) by vladpen). Changes since forking:
+
+### Identity
+- Renamed the app to **Garden Cam** with application ID `com.odiousapps.gardencam`, so it installs
+  alongside Cams and ONVIF Camera. Settings are not shared between them: export from the old app
+  and import into Garden Cam.
+- Moved the Kotlin packages from `com.vladpen` / `com.vladpen.cams` / `com.vladpen.onvif` to
+  `com.odiousapps.gardencam` and `com.odiousapps.gardencam.onvif`.
+- APKs are now named `gardencam-<abi>-<buildtype>.apk` and settings exports `gardencam<date>.cfg`.
+- About screen and documentation credit the fork history.
+
+### Platform and build
+- Target and compile SDK 37 (Android 17), Android Gradle Plugin 9.5.2, Kotlin 2.4.21, Gradle 9.9.1.
+- Updated dependencies: libVLC 3.7.7, Gson 2.15.0, JSch 2.28.8, AndroidX Core 1.19.1,
+  AppCompat 1.8.0, WorkManager 2.12.0, Activity 1.13.0, Material 1.14.0.
+- Release builds are now minified and resource-shrunk by R8, with keep rules for libVLC, JSch and the
+  Gson settings models.
+- Per-ABI version codes moved to the `androidComponents` API; ABI splits are skipped for App Bundle builds.
+- Supports Android 17's local network permission: it is requested when a camera is on the LAN, and
+  streams restart once it is granted.
+
+### Security
+- ONVIF credentials are now encrypted with AES-256-GCM using a key held in the Android Keystore.
+  Credentials saved by older versions are migrated on first load and the old key is deleted.
+  Settings exports use a device-independent form, protected by the export password.
+- Removed ONVIF debug tests that ran on every stream screen: they posted to httpbin.org, added a fake
+  device to the cache and sent extra requests to the camera.
+- XML from the camera's encoder settings is parsed with DOCTYPE declarations rejected.
+
+### Video and PTZ
+- Lower stream latency: network caching cut from 100 ms to 50 ms (also set per stream), and audio is
+  disabled on PTZ-capable streams so the picture is no longer timed against the audio buffer.
+- New **Tune camera for low latency** action in the camera editor: sets H.264 Baseline (no
+  B-frames) and, through ONVIF Media2, constant bitrate on every encoder, then reports what the camera kept.
+- PTZ prefers ContinuousMove and falls back to RelativeMove for cameras that reject it (such as Thingino).
+- Motion-event subscriptions are now released when leaving a stream: the unsubscribe request is sent,
+  and polling no longer leaks when a camera is reopened.
+- PTZ errors are logged instead of ignored.
+- Haptic feedback works on Android 7 (pre-Oreo vibration fallback).
+- Removed the previous/next file and seek bar from the recording player.
+
+### Housekeeping
+- Removed the unit and instrumented tests and their dependencies, and the GitHub Actions CI workflow.
+- Added a Software Heritage archive workflow that runs on tags.
+- Removed dead code (connection pool, test harnesses, unused helpers and data classes).
+- Plural-aware strings for camera counts and the export password length.
+- Many lint and inspection clean-ups (deprecated APIs, redundant constructs, named arguments).
+
 ## 2.5.0 - 2026-09-26
 
 - Added RTSP Backchannel Audio (Talk-to-Camera) support with push-to-talk microphone button, haptic/visual feedback, and immediate mute toggle

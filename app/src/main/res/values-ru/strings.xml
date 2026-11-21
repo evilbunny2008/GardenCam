@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ONVIF Camera</string>
+    <string name="app_name">Garden Cam</string>
     <string name="main_title">Камеры</string>
     <string name="cam_add">Добавить камеру</string>
     <string name="cam_name">Название *</string>
@@ -62,15 +62,20 @@
     <string name="about">О программе</string>
     <string name="about_text">
         <![CDATA[
-            <h1>Камеры, версия %1$s</h1><br/>
-            Copyright &copy; %2$s vladpen, лицензия MIT<br/><br/>
-            <a href="https://github.com/vladpen/cams">Домашняя страница</a><br/><br/>
-            <a href="https://github.com/vladpen/cams/issues">
+            <h1>Garden Cam, версия %1$s</h1><br/>
+            <b>Форк приложения ONVIF Camera (Mark Retallack), которое, в свою очередь, является форком приложения Cams (vladpen)</b><br/><br/>
+            Поддерживает evilbunny2008<br/>
+            <a href="https://github.com/evilbunny2008/cams">Домашняя страница</a><br/><br/>
+            Предыдущий форк: <a href="https://github.com/mretallack/cams">https://github.com/mretallack/cams</a><br/>
+            Оригинальное приложение: <a href="https://github.com/vladpen/cams">https://github.com/vladpen/cams</a><br/><br/>
+            Copyright &copy; %2$s evilbunny2008, Mark Retallack, vladpen<br/>
+            Лицензия MIT<br/><br/>
+            <a href="https://github.com/evilbunny2008/cams/issues">
                 Отчеты об ошибках и трекер задач</a>
         ]]>
     </string>
     <string name="manual_link">
-        <![CDATA[<a href="https://github.com/vladpen/cams/">Инструкция</a>]]>
+        <![CDATA[<a href="https://github.com/evilbunny2008/cams#readme">Инструкция</a>]]>
     </string>
     <string name="copy">Копировать</string>
     <string name="paste">Вставить</string>

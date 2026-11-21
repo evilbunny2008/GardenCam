@@ -3,7 +3,7 @@
 echo "Setting up Thingino camera in the app..."
 
 # Launch the app
-adb shell am start -n com.vladpen.cams/.MainActivity
+adb shell am start -n com.odiousapps.gardencam/.MainActivity
 sleep 3
 
 # Tap the "ADD CAMERA" button (center coordinates from UI dump: bounds="[405,997][675,1117]")

@@ -43,10 +43,10 @@
 -dontwarn org.apache.logging.log4j.**
 
 # Gson: models saved to and loaded from settings JSON must keep their field names
--keep class com.vladpen.StreamDataModel { <fields>; <init>(...); }
--keep class com.vladpen.GroupDataModel { <fields>; <init>(...); }
--keep class com.vladpen.SourceDataModel { <fields>; <init>(...); }
--keep class com.vladpen.onvif.DeviceCapabilities { <fields>; <init>(...); }
--keep class com.vladpen.onvif.PTZCapabilities { <fields>; <init>(...); }
--keep class com.vladpen.onvif.EventCapabilities { <fields>; <init>(...); }
--keep class com.vladpen.onvif.PTZPreset { <fields>; <init>(...); }
+-keep class com.odiousapps.gardencam.StreamDataModel { <fields>; <init>(...); }
+-keep class com.odiousapps.gardencam.GroupDataModel { <fields>; <init>(...); }
+-keep class com.odiousapps.gardencam.SourceDataModel { <fields>; <init>(...); }
+-keep class com.odiousapps.gardencam.onvif.DeviceCapabilities { <fields>; <init>(...); }
+-keep class com.odiousapps.gardencam.onvif.PTZCapabilities { <fields>; <init>(...); }
+-keep class com.odiousapps.gardencam.onvif.EventCapabilities { <fields>; <init>(...); }
+-keep class com.odiousapps.gardencam.onvif.PTZPreset { <fields>; <init>(...); }

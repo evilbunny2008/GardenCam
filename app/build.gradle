@@ -6,12 +6,12 @@ android {
     compileSdk = 37
 
     defaultConfig {
-        applicationId 'com.odiousapps.onvifcamera'
+        applicationId 'com.odiousapps.gardencam'
         minSdk 24
         targetSdk 37
         versionCode 10101388
         versionName '2.5.3'
-        base.archivesName = 'cams'
+        base.archivesName = 'gardencam'
     }
     buildTypes {
         release {
@@ -42,7 +42,7 @@ android {
             universalApk false
         }
     }
-    namespace 'com.vladpen.cams'
+    namespace 'com.odiousapps.gardencam'
     buildToolsVersion '37.0.0'
 }
 

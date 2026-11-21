@@ -1,5 +1,7 @@
 Simple Android mobile app for playing RTSP streams from IP cameras
 
+Garden Cam is a fork of ONVIF Camera (Mark Retallack), itself a fork of Cams (vladpen). It adds low-latency tuning for ONVIF PTZ cameras, Keystore-encrypted ONVIF credentials and Android 17 support.
+
 Features:
 
 * View RTSP streams from any IP cameras, including H.265+.
