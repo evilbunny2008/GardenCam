@@ -279,19 +279,12 @@ and server: [habr.com/ru/post/597363](https://habr.com/ru/post/597363/).
 
 ## Version Codes
 
-Garden Cam restarted its versioning at `versionName` 0.0.1, `versionCode` 1.
-Increase `versionCode` by 1 for each release; the build turns it into one code per output:
+Garden Cam restarted its versioning at `versionName` 0.0.1, `versionCode` 1. Only arm64-v8a is
+built, so the APK and the App Bundle use `versionCode` as is. For each release, increase
+`versionCode` by 1 and `versionName` to match: 0.0.2 is `versionCode` 2, 0.0.3 is 3, and so on.
 
-| Output                 | versionCode            | Example for versionCode 2 |
-|------------------------|------------------------|---------------------------|
-| App Bundle (no splits) | versionCode × 10       | 20                        |
-| arm64-v8a APK          | versionCode × 10 + 2   | 22                        |
-
-Version 0.0.1 (versionCode 1) also had armeabi-v7a (+1), x86 (+3) and x86_64 (+4) APKs. Those
-digits stay reserved, so codes never clash if an ABI is added back.
-
-Release notes go in `fastlane/metadata/android/en-US/changelogs/<code>.txt`, one file for each of
-these codes (500 characters at most).
+Release notes go in `fastlane/metadata/android/en-US/changelogs/<versionCode>.txt`
+(500 characters at most).
 
 *Copyright © 2026 evilbunny2008, © 2026 Mark Retallack, © 2022-2025 vladpen, under the MIT license.
 Use it with absolutely no warranty.*

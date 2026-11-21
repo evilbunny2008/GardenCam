@@ -16,8 +16,7 @@ Garden Cam (a fork of [ONVIF Camera](https://github.com/mretallack/cams), itself
 
 | Version | Supported          | Status                         |
 |---------|--------------------|--------------------------------|
-| 0.0.2   | :white_check_mark: | Current Garden Cam development |
-| 0.0.1   | :x:                | Superseded by 0.0.2            |
+| 0.0.1   | :white_check_mark: | Current Garden Cam development |
 
 Versions of Cams and ONVIF Camera (2.x) are separate apps and are not covered by this policy.
 
@@ -220,7 +219,7 @@ All dependencies use permissive open-source licenses (MIT, Apache 2.0, BSD, LGPL
 
 ## Changelog
 
-- **2026-11-22**: Version 0.0.2
+- **2026-11-22**: libvlc and ABIs
   - libvlc replaced with a stripped-down custom build without TLS
   - Only arm64-v8a is supported
 - **2026-11-21**: Updated for the Garden Cam fork
@@ -237,4 +236,4 @@ All dependencies use permissive open-source licenses (MIT, Apache 2.0, BSD, LGPL
 ---
 
 *Last Updated: 2026-11-22*  
-*Version: 0.0.2*
+*Version: 0.0.1*

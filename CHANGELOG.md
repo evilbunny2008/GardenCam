@@ -1,21 +1,7 @@
-## 0.0.2 - unreleased
-
-### Platform and build
-- Only arm64-v8a is built now; armeabi-v7a, x86 and x86_64 are no longer supported. Devices with a
-  32-bit Android system, including many Android TV boxes, can no longer install the app.
-- libVLC is now a custom, stripped-down 3.7.7 build (`app/libs/libvlc.aar`) instead of `libvlc-all`
-  from Maven Central. It keeps RTSP, RTP, plain HTTP, MPEG-TS/PS, MP4, H.264/H.265, MJPEG, still
-  images and G.711/G.726/AAC audio, and drops everything else, including TLS (`https://` and
-  `rtsps://` streams), RTMP and subtitles. Native libraries shrink from 55.3 MB to 11.6 MB and the
-  release APK to about 7 MB. The patches and build script are in `libvlc/`.
-- `ndkVersion` is set so native libraries are stripped of debug symbols when packaged
-  (`libc++_shared.so`: 9.3 MB to 1.4 MB).
-- Fullscreen stream view uses `WindowInsetsControllerCompat` instead of the deprecated
-  `systemUiVisibility` flags.
-
 ## 0.0.1 - unreleased (Garden Cam fork)
 
-Versioning restarted at 0.0.1 (versionCode 1) for the fork.
+Versioning restarted at 0.0.1 (versionCode 1) for the fork. Each release increases versionCode by 1;
+there are no per-ABI version codes.
 
 Forked from [ONVIF Camera](https://github.com/mretallack/cams) 2.5.0 by Mark Retallack
 (itself a fork of [Cams](https://github.com/vladpen/cams) by vladpen). Changes since forking:
@@ -31,11 +17,20 @@ Forked from [ONVIF Camera](https://github.com/mretallack/cams) 2.5.0 by Mark Ret
 
 ### Platform and build
 - Target and compile SDK 37 (Android 17), Android Gradle Plugin 9.5.2, Kotlin 2.4.21, Gradle 9.9.1.
-- Updated dependencies: libVLC 3.7.7, Gson 2.15.0, JSch 2.28.8, AndroidX Core 1.19.1,
-  AppCompat 1.8.0, WorkManager 2.12.0, Activity 1.13.0, Material 1.14.0.
+- Only arm64-v8a is built; armeabi-v7a, x86 and x86_64 are no longer supported. Devices with a
+  32-bit Android system, including many Android TV boxes, cannot install the app.
+- libVLC is a custom, stripped-down 3.7.7 build (`app/libs/libvlc.aar`) instead of `libvlc-all`
+  from Maven Central. It keeps RTSP, RTP, plain HTTP, MPEG-TS/PS, MP4, H.264/H.265, MJPEG, still
+  images and G.711/G.726/AAC audio, and drops everything else, including TLS (`https://` and
+  `rtsps://` streams), RTMP and subtitles. Native libraries shrink from 55.3 MB to 11.6 MB and the
+  release APK to about 7 MB. The patches and build script are in `libvlc/`.
+- Updated dependencies: Gson 2.15.0, JSch 2.28.8, AndroidX Core 1.19.1, AppCompat 1.8.0,
+  WorkManager 2.12.0, Activity 1.13.0, Material 1.14.0.
 - Release builds are now minified and resource-shrunk by R8, with keep rules for libVLC, JSch and the
   Gson settings models.
-- Per-ABI version codes moved to the `androidComponents` API; ABI splits are skipped for App Bundle builds.
+- `ndkVersion` is set so native libraries are stripped of debug symbols when packaged
+  (`libc++_shared.so`: 9.3 MB to 1.4 MB).
+- ABI splits are skipped for App Bundle builds, which restrict ABIs with `ndk.abiFilters` instead.
 - Supports Android 17's local network permission: it is requested when a camera is on the LAN, and
   streams restart once it is granted.
 
@@ -65,6 +60,7 @@ Forked from [ONVIF Camera](https://github.com/mretallack/cams) 2.5.0 by Mark Ret
 - Removed dead code (connection pool, test harnesses, unused helpers and data classes).
 - Plural-aware strings for camera counts and the export password length.
 - Many lint and inspection clean-ups (deprecated APIs, redundant constructs, named arguments).
+  Fullscreen stream view uses `WindowInsetsControllerCompat` instead of `systemUiVisibility` flags.
 
 ## 2.5.0 - 2026-09-26
 

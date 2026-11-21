@@ -1,8 +1,0 @@
-First Garden Cam release, forked from ONVIF Camera 2.5.0 (itself a fork of Cams).
-
-- New app ID: installs alongside Cams and ONVIF Camera
-- Lower PTZ latency: smaller stream cache, no audio on PTZ streams
-- "Tune camera for low latency": sets H.264 Baseline and CBR over ONVIF
-- ONVIF credentials encrypted with the Android Keystore
-- Android 17 support, including local network access
-- Fixed motion-event subscriptions not being released
