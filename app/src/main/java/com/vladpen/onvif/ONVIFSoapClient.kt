@@ -18,6 +18,8 @@ class ONVIFSoapClient(
     companion object {
         private const val TIMEOUT = 10000
         private const val ONVIF_NAMESPACE = "http://www.onvif.org/ver10/device/wsdl"
+        private const val SOAP_NAMESPACE = "http://www.w3.org/2003/05/soap-envelope"
+        const val SCHEMA_NAMESPACE = "http://www.onvif.org/ver10/schema"
     }
 
     // Fix URL format issues
@@ -28,6 +30,32 @@ class ONVIFSoapClient(
     }
 
     fun sendRequest(method: String, namespace: String = ONVIF_NAMESPACE, parameters: Map<String, Any> = emptyMap()): ONVIFResponse? {
+        val parameterXml = parameters.entries.joinToString("") { (key, value) ->
+            "<$key>$value</$key>"
+        }
+        return post(method, namespace, parameterXml)?.let { parseResponse(it) }
+    }
+
+    /**
+     * Sends [bodyXml] as the children of the request element. Elements in [namespace] must use
+     * the "tds" prefix and ONVIF schema types the "tt" prefix; both are declared on the envelope.
+     * Returns a namespace-aware document, or null on a transport error or SOAP fault.
+     */
+    fun sendXmlRequest(method: String, namespace: String, bodyXml: String): Document? {
+        val response = post(method, namespace, bodyXml) ?: return null
+        return try {
+            val factory = DocumentBuilderFactory.newInstance()
+            factory.isNamespaceAware = true
+            factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true)
+            val document = factory.newDocumentBuilder().parse(ByteArrayInputStream(response.toByteArray()))
+            if (document.getElementsByTagNameNS(SOAP_NAMESPACE, "Fault").length > 0) null else document
+        } catch (e: Exception) {
+            android.util.Log.e("ONVIF", "Failed to parse $method response: ${e.message}")
+            null
+        }
+    }
+
+    private fun post(method: String, namespace: String, parameterXml: String): String? {
         return try {
             android.util.Log.d("ONVIF", "Sending SOAP request: $method to $serviceUrl")
             
@@ -40,33 +68,28 @@ class ONVIFSoapClient(
                 return null
             }
 
-            val soapEnvelope = createSoapEnvelope(safeMethod, safeNamespace, parameters)
+            val soapEnvelope = createSoapEnvelope(safeMethod, safeNamespace, parameterXml)
             android.util.Log.d("ONVIF", "SOAP envelope created, sending HTTP request")
             
             val response = sendHttpRequest(soapEnvelope)
             
             if (response != null) {
                 android.util.Log.d("ONVIF", "Received SOAP response: ${response.take(200)}...")
-                parseResponse(response)
             } else {
                 android.util.Log.e("ONVIF", "No response received from ONVIF device")
-                null
             }
+            response
         } catch (e: Exception) {
             android.util.Log.e("ONVIF", "SOAP request failed: ${e.message}")
             null
         }
     }
 
-    private fun createSoapEnvelope(method: String, namespace: String, parameters: Map<String, Any>): String {
+    private fun createSoapEnvelope(method: String, namespace: String, parameterXml: String): String {
         val securityHeader = credentials?.let { createWSSecurityHeader(it) } ?: ""
-        
-        val parameterXml = parameters.entries.joinToString("") { (key, value) ->
-            "<$key>$value</$key>"
-        }
 
         return """<?xml version="1.0" encoding="UTF-8"?>
-<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:tds="$namespace">
+<soap:Envelope xmlns:soap="$SOAP_NAMESPACE" xmlns:tds="$namespace" xmlns:tt="$SCHEMA_NAMESPACE">
     <soap:Header>
         $securityHeader
     </soap:Header>
@@ -180,7 +203,7 @@ class ONVIFResponse(private val document: Document) {
         return try {
             val element = document.documentElement
             val attr = element.getAttribute(name)
-            if (attr.isNotEmpty()) attr else null
+            attr.ifEmpty { null }
         } catch (e: Exception) {
             null
         }
@@ -217,8 +240,8 @@ class ONVIFResponse(private val document: Document) {
                 newDoc.appendChild(importedNode)
                 results.add(ONVIFResponse(newDoc))
             }
-            
-            if (results.isNotEmpty()) results else null
+
+            results.ifEmpty { null }
         } catch (e: Exception) {
             null
         }

@@ -73,8 +73,8 @@ class BackchannelClient {
         }
 
         // Sort: PCMU first, then PCMA, then AAC
-        return tracks.sortedBy { track ->
-            when (track.codec) {
+        return tracks.sortedBy { (codec) ->
+            when (codec) {
                 Codec.PCMU -> 0
                 Codec.PCMA -> 1
                 Codec.AAC -> 2
@@ -120,8 +120,8 @@ class BackchannelClient {
             android.util.Log.d("BACKCHANNEL", "SDP content:\n$sdp")
             val tracks = parseSdpForBackchannel(sdp)
             android.util.Log.d("BACKCHANNEL", "Parsed ${tracks.size} backchannel tracks")
-            for (t in tracks) {
-                android.util.Log.d("BACKCHANNEL", "Track: codec=${t.codec}, pt=${t.payloadType}, url=${t.controlUrl}")
+            for ((codec, payloadType, _, controlUrl) in tracks) {
+                android.util.Log.d("BACKCHANNEL", "Track: codec=$codec, pt=$payloadType, url=$controlUrl")
             }
             disconnect()
             return tracks.firstOrNull()
@@ -317,7 +317,6 @@ class BackchannelClient {
     }
 
     private fun teardown() {
-        val url = session?.let { "rtsp://" } ?: return // simplified, just close
         // Best effort teardown
         disconnect()
     }

@@ -86,4 +86,5 @@
     <string name="ptz_invert_horizontal">Odwróć PTZ w poziomie</string>
     <string name="ptz_invert_vertical">Odwróć PTZ w pionie</string>
     <string name="ptz_rate_limit">"Limit częstotliwości PTZ (ms): "</string>
+    <string name="onvif_tune_encoder">Dostrój kamerę pod niskie opóźnienie</string>
 </resources>

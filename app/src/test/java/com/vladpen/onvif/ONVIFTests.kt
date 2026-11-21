@@ -61,8 +61,8 @@ class ONVIFDeviceTest {
         val capabilities = DeviceCapabilities(
             supportsPTZ = true,
             supportsMotionEvents = true,
-            ptzCapabilities = PTZCapabilities(true, true, true, true, 10),
-            eventCapabilities = EventCapabilities(true, false, 5)
+            ptzCapabilities = PTZCapabilities(supportsPan = true, supportsTilt = true, supportsZoom = true, supportsPresets = true, maxPresets = 10),
+            eventCapabilities = EventCapabilities(supportsMotionDetection = true, supportsTamperDetection = false, maxEventSubscriptions = 5)
         )
         
         val credentials = ONVIFCredentials("admin", "password")

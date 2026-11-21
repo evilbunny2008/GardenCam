@@ -136,6 +136,9 @@ class EditActivity : AppCompatActivity() {
         binding.tvDiscoverOnvif.setOnClickListener {
             discoverOnvifDevices()
         }
+        binding.tvTuneEncoder.setOnClickListener {
+            confirmTuneEncoder()
+        }
         binding.btnSave.setOnClickListener {
             save()
         }
@@ -213,9 +216,12 @@ class EditActivity : AppCompatActivity() {
             ptzRateLimit = binding.etPtzRateLimit.text.toString().toLongOrNull() ?: 200L,
             deviceCapabilities = if (isOnvifDevice) {
                 // Default capabilities - will be updated when device is tested
-                DeviceCapabilities(true, true, 
-                    PTZCapabilities(true, true, true, true, 10),
-                    EventCapabilities(true, false, 5))
+                DeviceCapabilities(
+                    supportsPTZ = true,
+                    supportsMotionEvents = true,
+                    ptzCapabilities = PTZCapabilities(supportsPan = true, supportsTilt = true, supportsZoom = true, supportsPresets = true, maxPresets = 10),
+                    eventCapabilities = EventCapabilities(supportsMotionDetection = true, supportsTamperDetection = false, maxEventSubscriptions = 5)
+                )
             } else null
         )
         
@@ -360,6 +366,55 @@ class EditActivity : AppCompatActivity() {
                     .setPositiveButton("OK", null)
                     .show()
             }
+        }
+    }
+
+    private fun confirmTuneEncoder() {
+        val parsed = ONVIFUrlParser.parseOnvifUrl(binding.etOnvifUrl.text.toString().trim())
+        if (parsed == null) {
+            AlertDialog.Builder(this)
+                .setTitle("Low Latency")
+                .setMessage("Enter the camera's ONVIF URL first.")
+                .setPositiveButton("OK", null)
+                .show()
+            return
+        }
+        AlertDialog.Builder(this)
+            .setTitle("Low Latency")
+            .setMessage("This changes the camera's own video encoder settings for every stream: " +
+                    "H.264 Baseline profile (no B-frames) and constant bitrate, where the camera supports them. " +
+                    "Streams may briefly reconnect.")
+            .setPositiveButton("Apply") { _, _ ->
+                withLocalNetwork(LocalNetwork.needsPermission(this, listOf(parsed.serviceUrl))) {
+                    tuneEncoder(parsed)
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun tuneEncoder(parsed: ONVIFUrlParser.ParsedOnvifUrl) {
+        val progressDialog = AlertDialog.Builder(this)
+            .setTitle("Low Latency")
+            .setMessage("Updating camera encoder settings...")
+            .setCancelable(false)
+            .create()
+        progressDialog.show()
+
+        lifecycleScope.launch {
+            val report = try {
+                withContext(Dispatchers.IO) {
+                    ONVIFEncoderTuner(parsed.serviceUrl, parsed.credentials).applyLowLatency()
+                }
+            } catch (e: Exception) {
+                listOf("Error: ${e.message}")
+            }
+            progressDialog.dismiss()
+            AlertDialog.Builder(this@EditActivity)
+                .setTitle("Low Latency")
+                .setMessage(report.joinToString("\n\n"))
+                .setPositiveButton("OK", null)
+                .show()
         }
     }
 

@@ -98,6 +98,16 @@
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/tvTuneEncoder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:padding="10dp"
+                android:text="@string/onvif_tune_encoder"
+                android:textColor="@color/files_link"
+                android:background="?attr/selectableItemBackground" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

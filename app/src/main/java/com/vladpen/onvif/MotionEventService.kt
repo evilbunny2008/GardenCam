@@ -112,7 +112,7 @@ class MotionEventService(
             )
         } catch (e: Exception) {
             android.util.Log.e("MOTION_EVENT", "Error getting event capabilities: ${e.message}", e)
-            EventCapabilities(false, false, 0)
+            EventCapabilities(supportsMotionDetection = false, supportsTamperDetection = false, maxEventSubscriptions = 0)
         }
     }
 

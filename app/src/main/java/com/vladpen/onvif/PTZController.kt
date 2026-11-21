@@ -29,7 +29,7 @@ class PTZController(
             // Try to extract PTZ XAddr from capabilities - look for PTZ.XAddr specifically
             val ptzXAddr = capabilitiesResponse.getProperty("PTZ.XAddr")
             
-            ptzServiceUrl = if (ptzXAddr != null && ptzXAddr.isNotEmpty()) {
+            ptzServiceUrl = if (!ptzXAddr.isNullOrEmpty()) {
                 // Use hostname instead of IP if XAddr contains IP
                 if (ptzXAddr.contains("10.0.0.") || ptzXAddr.contains("192.168.")) {
                     val path = ptzXAddr.substringAfter(":80").substringAfter(":8080")
@@ -117,7 +117,7 @@ class PTZController(
         val profiles = response.getPropertyList("Profiles") 
             ?: response.getPropertyList("Profile")
         
-        if (profiles != null && profiles.isNotEmpty()) {
+        if (!profiles.isNullOrEmpty()) {
             val firstProfile = profiles[0]
             return firstProfile.getProperty("token") 
                 ?: firstProfile.getAttribute("token")

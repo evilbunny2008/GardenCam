@@ -124,7 +124,7 @@ class LogActivity: AppCompatActivity() {
         val label = getString(R.string.logs)
         val clipboardManager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
         val clipData = ClipData.newPlainText(label, textToCopy)
-        clipboardManager.setPrimaryClip(clipData)
+        clipboardManager.primaryClip = clipData
         Effects.fadeOut(arrayOf(binding.toolbar.btnLink))
     }
 }

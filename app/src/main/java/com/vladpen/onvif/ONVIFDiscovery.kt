@@ -94,7 +94,7 @@ class ONVIFDiscovery {
                 ipAddress = ipAddress,
                 onvifPort = port,
                 rtspUrl = "", // Will be populated later
-                capabilities = deviceInfo?.capabilities ?: DeviceCapabilities(false, false, null, null),
+                capabilities = deviceInfo?.capabilities ?: DeviceCapabilities(supportsPTZ = false, supportsMotionEvents = false, ptzCapabilities = null, eventCapabilities = null),
                 credentials = null
             )
         } catch (e: Exception) {
@@ -145,12 +145,12 @@ class ONVIFDiscovery {
                 DeviceCapabilities(
                     supportsPTZ = ptzSupported,
                     supportsMotionEvents = eventSupported,
-                    ptzCapabilities = if (ptzSupported) PTZCapabilities(true, true, true, true, 10) else null,
-                    eventCapabilities = if (eventSupported) EventCapabilities(true, false, 5) else null
+                    ptzCapabilities = if (ptzSupported) PTZCapabilities(supportsPan = true, supportsTilt = true, supportsZoom = true, supportsPresets = true, maxPresets = 10) else null,
+                    eventCapabilities = if (eventSupported) EventCapabilities(supportsMotionDetection = true, supportsTamperDetection = false, maxEventSubscriptions = 5) else null
                 )
-            } ?: DeviceCapabilities(false, false, null, null)
+            } ?: DeviceCapabilities(supportsPTZ = false, supportsMotionEvents = false, ptzCapabilities = null, eventCapabilities = null)
         } catch (e: Exception) {
-            DeviceCapabilities(false, false, null, null)
+            DeviceCapabilities(supportsPTZ = false, supportsMotionEvents = false, ptzCapabilities = null, eventCapabilities = null)
         }
     }
 

@@ -85,4 +85,5 @@
     <string name="ptz_invert_horizontal">Inverter PTZ horizontal</string>
     <string name="ptz_invert_vertical">Inverter PTZ vertical</string>
     <string name="ptz_rate_limit">"Limite de taxa PTZ (ms): "</string>
+    <string name="onvif_tune_encoder">Ajustar câmera para baixa latência</string>
 </resources>

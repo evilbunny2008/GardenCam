@@ -86,4 +86,5 @@
     <string name="ptz_invert_horizontal">Инвертировать PTZ по горизонтали</string>
     <string name="ptz_invert_vertical">Инвертировать PTZ по вертикали</string>
     <string name="ptz_rate_limit">"Ограничение частоты PTZ (мс): "</string>
+    <string name="onvif_tune_encoder">Настроить камеру на минимальную задержку</string>
 </resources>
