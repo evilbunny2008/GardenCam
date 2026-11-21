@@ -23,6 +23,9 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.Insets
 import androidx.core.net.toUri
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.odiousapps.gardencam.Effects.edgeToEdge
 import com.odiousapps.gardencam.databinding.ActivityStreamsBinding
 import com.odiousapps.gardencam.onvif.*
@@ -89,14 +92,13 @@ class StreamsActivity : AppCompatActivity(), Layout {
         // Lock to landscape orientation for better video viewing
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         
-        // Enable fullscreen immersive mode
-        window.decorView.systemUiVisibility = (
-            View.SYSTEM_UI_FLAG_FULLSCREEN or
-            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-            View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-        )
-        
         setContentView(binding.root)
+        
+        // Enable fullscreen immersive mode (bars reappear transiently on swipe)
+        WindowCompat.getInsetsController(window, window.decorView).apply {
+            systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            hide(WindowInsetsCompat.Type.systemBars())
+        }
         
         // Hide toolbar for true fullscreen experience
         binding.toolbar.root.visibility = View.GONE
