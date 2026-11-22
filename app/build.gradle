@@ -1,3 +1,5 @@
+import com.android.build.api.artifact.SingleArtifact
+
 plugins {
     id 'com.android.application'
 }
@@ -53,6 +55,91 @@ android {
     buildToolsVersion '37.0.0'
     // Needed so AGP can strip debug symbols from native libs (libc++_shared.so ships unstripped)
     ndkVersion '29.0.14206865'
+}
+
+// Release outputs are named GardenCam-v<versionName>.apk/.aab and copied to app/dist/, outside
+// build/ so they survive a clean. Same approach as WeeWXWeatherApp.
+
+// Copies the release .aab from AGP's default location to app/dist/. Must run after AGP's
+// "produce...BundleIdeListingFile" task, which takes the bundle at its default location as an input.
+abstract class RenameBundleTask extends DefaultTask {
+    @InputFile
+    abstract RegularFileProperty getBundleFile()
+
+    @OutputFile
+    abstract RegularFileProperty getDestinationFile()
+
+    @TaskAction
+    void rename() {
+        def file = bundleFile.get().asFile
+        if (!file.exists()) {
+            logger.lifecycle("renameBundle: expected bundle file not found at $file - skipping rename")
+            return
+        }
+        def destination = destinationFile.get().asFile
+        destination.parentFile.mkdirs()
+        java.nio.file.Files.copy(file.toPath(), destination.toPath(),
+                java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+        logger.lifecycle("renameBundle: copied to $destination")
+        // Leave the original in place: the bundle tasks stay up to date between runs and won't
+        // recreate it, but produceBundleIdeListingFile and this task need it on the next build.
+    }
+}
+
+// Copies the release APK(s) to app/dist/. SingleArtifact.APK is a directory, so copy every .apk in it.
+abstract class CopyApkTask extends DefaultTask {
+    @InputFiles
+    abstract DirectoryProperty getApkDirectory()
+
+    @OutputDirectory
+    abstract DirectoryProperty getDestinationDirectory()
+
+    @TaskAction
+    void copy() {
+        def destDir = destinationDirectory.get().asFile
+        destDir.mkdirs()
+        apkDirectory.get().asFile.listFiles().findAll { it.name.endsWith('.apk') }.each { apk ->
+            def dest = new File(destDir, apk.name)
+            java.nio.file.Files.copy(apk.toPath(), dest.toPath(),
+                    java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+            logger.lifecycle("copyApk: copied to $dest")
+        }
+    }
+}
+
+androidComponents {
+    onVariants(selector().withBuildType('release')) { variant ->
+        def appName = 'GardenCam'
+        def versionName = variant.outputs.first().versionName
+        def variantNameCapitalized = variant.name.capitalize()
+
+        variant.outputs.each { output ->
+            output.outputFileName.set(versionName.map { "$appName-v${it}.apk" as String })
+        }
+
+        def renameBundle = tasks.register("renameBundle$variantNameCapitalized", RenameBundleTask) {
+            group = 'build'
+            description = "Copies the $variantNameCapitalized .aab to app/dist/"
+            mustRunAfter("produce${variantNameCapitalized}BundleIdeListingFile")
+            bundleFile.set(variant.artifacts.get(SingleArtifact.BUNDLE.INSTANCE))
+            destinationFile.set(versionName.map { layout.projectDirectory.file("dist/$appName-v${it}.aab") })
+        }
+
+        def copyApk = tasks.register("copyApk$variantNameCapitalized", CopyApkTask) {
+            group = 'build'
+            description = "Copies the $variantNameCapitalized apk(s) to app/dist/"
+            apkDirectory.set(variant.artifacts.get(SingleArtifact.APK.INSTANCE))
+            destinationDirectory.set(layout.projectDirectory.dir('dist'))
+        }
+
+        // onVariants already runs after evaluation, so match the tasks lazily
+        tasks.matching { it.name == "bundle$variantNameCapitalized" }.configureEach {
+            finalizedBy(renameBundle)
+        }
+        tasks.matching { it.name == "assemble$variantNameCapitalized" }.configureEach {
+            finalizedBy(copyApk)
+        }
+    }
 }
 
 dependencies {
