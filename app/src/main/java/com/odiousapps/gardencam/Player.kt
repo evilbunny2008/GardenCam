@@ -23,6 +23,9 @@ interface Player {
             "--clock-jitter=0",
             "--clock-synchro=0",
             "--image-duration=1",  // for "events" slideshow
+            // 4K keyframes can be ~700 KB. With live555's 250 KB default the first few are dropped
+            // (and the buffer doubled each time) before anything can be shown.
+            "--rtsp-frame-buffer-size=2000000",
         )
         if (tcp)
             options.add("--rtsp-tcp")

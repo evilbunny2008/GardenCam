@@ -1,3 +1,9 @@
+## 0.0.6 - unreleased
+
+### Changes
+- RTSP streams show their first picture sooner: VLC's frame buffer starts at 2 MB, so large
+  keyframes (about 700 KB from a 4K camera) are no longer dropped while it grows from 250 KB.
+
 ## 0.0.5 - unreleased
 
 ### Fixes
