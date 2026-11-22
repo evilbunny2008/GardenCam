@@ -1,3 +1,10 @@
+## 0.0.5 - unreleased
+
+### Fixes
+- The video fills its frame instead of showing as a small picture in the middle. libVLC now fits
+  the picture to the window itself (`SURFACE_BEST_FIT`) rather than using a zoom factor fixed when
+  playback started.
+
 ## 0.0.4 - unreleased
 
 ### Changes

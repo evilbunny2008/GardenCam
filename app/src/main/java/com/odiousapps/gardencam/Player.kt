@@ -36,8 +36,10 @@ interface Player {
         mediaPlayer = MediaPlayer(libVlc)
         mediaPlayer.attachViews(view, null, false, false)
 
-        // Maintain aspect ratio and center video on screen
-        mediaPlayer.videoScale = MediaPlayer.ScaleType.SURFACE_FIT_SCREEN
+        // Fit the picture to the frame, keeping its aspect ratio and centring it. VLC rescales it
+        // whenever the window changes. (SURFACE_FIT_SCREEN instead fixes a zoom factor computed
+        // once from the track and layout, which left the picture far smaller than the frame.)
+        mediaPlayer.videoScale = MediaPlayer.ScaleType.SURFACE_BEST_FIT
 
         mediaPlayer.setEventListener {
             when (it.type) {
