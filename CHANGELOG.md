@@ -8,6 +8,9 @@
 ### Fixes
 - The About screen scrolls, so the credits, the issue tracker link and **Device logs** can be reached
   in landscape.
+- RTSP streams from cameras that return a new session ID for each SETUP (seen on "H264DVR"
+  firmware) no longer stay black and fail with "no data received in 10s". libvlc's live555 now
+  keeps the first session ID, as FFmpeg does.
 
 ## 0.0.1 - unreleased (Garden Cam fork)
 

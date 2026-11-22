@@ -58,6 +58,10 @@ patches below, rebuilds the contribs from scratch and copies the AAR to `app/lib
 - **`vlc.patch`** (applies to `vlc-android/libvlcjni/vlc`)
   - `contrib/src/ffmpeg/rules.mak`: on Android, FFmpeg is built with `--disable-everything` and
     only the decoders and parsers listed above.
+  - `contrib/src/live555/keep-first-session-id.patch` (applied by `contrib/src/live555/rules.mak`):
+    live555 keeps the session ID from the first SETUP instead of the last. Some cameras ("H264DVR"
+    firmware) return a new ID for every SETUP but only stream on the first, so VLC's PLAY got no
+    data. Desktop VLC has the same problem; FFmpeg already uses the first ID.
 
 FFmpeg's avformat is still built, without any demuxers, because VLC 3's avcodec module does not
 compile without it. The `avformat` and `avio` plugins are blacklisted.

@@ -9,6 +9,10 @@
 #   export ANDROID_NDK=$ANDROID_SDK/ndk/29.0.14206865
 set -e
 
+export ANDROID_SDK=/opt/android-sdk-linux
+export ANDROID_NDK=/opt/android-sdk-linux/ndk/29.0.14206865
+
+
 HERE=$(cd "$(dirname "$0")" && pwd -P)
 APP_DIR=$(dirname "$HERE")
 VLC_ANDROID=${1:-$(dirname "$APP_DIR")/vlc-android}

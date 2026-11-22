@@ -16,3 +16,35 @@ index e4b5595b59..a80b51462d 100644
  # Small size
  ifdef WITH_OPTIMIZATION
  ifdef ENABLE_SMALL
+diff --git a/contrib/src/live555/keep-first-session-id.patch b/contrib/src/live555/keep-first-session-id.patch
+new file mode 100644
+index 0000000000..e7b91c29cb
+--- /dev/null
++++ b/contrib/src/live555/keep-first-session-id.patch
+@@ -0,0 +1,13 @@
++--- live555/liveMedia/RTSPClient.cpp	2026-11-22 11:39:28.469670637 +1100
+++++ live555.modified/liveMedia/RTSPClient.cpp	2026-11-22 11:39:28.492649709 +1100
++@@ -1257,7 +1257,9 @@
++       break;
++     }
++     subsession.setSessionId(sessionId);
++-    delete[] fLastSessionId; fLastSessionId = strDup(sessionId);
+++    // Keep the first session ID. Some cameras ("H264DVR" firmware) return a new ID for each
+++    // SETUP but only stream on the first, so a PLAY with the last ID gets no data.
+++    if (fLastSessionId == NULL) fLastSessionId = strDup(sessionId);
++ 
++     // Also look for an optional "; timeout = " parameter following this:
++     char const* afterSessionId = sessionParamsStr + strlen(sessionId);
+diff --git a/contrib/src/live555/rules.mak b/contrib/src/live555/rules.mak
+index 580020ccae..bd8238e7b0 100644
+--- a/contrib/src/live555/rules.mak
++++ b/contrib/src/live555/rules.mak
+@@ -97,6 +97,8 @@ endif
+ 	$(APPLY) $(SRC)/live555/file-offset-bits-64.patch
+ 	# add IPv4 inet_pton()/inet_ntop() helper on older Windows
+ 	$(APPLY) $(SRC)/live555/live555-vista-inet.patch
++	# keep the first SETUP session ID (cameras that issue one per SETUP)
++	$(APPLY) $(SRC)/live555/keep-first-session-id.patch
+ 	# fix Win32 time_tm constructor to build on older compilers
+ 	sed -e 's,= tm{},= tm\(\),' -i.orig $(UNPACK_DIR)/liveMedia/RTSPCommon.cpp
+ 	# disable code built/installed in unused folder
