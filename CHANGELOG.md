@@ -1,3 +1,9 @@
+## 0.0.3 - unreleased
+
+### Build
+- Release builds are named `GardenCam-v<versionName>.apk` and `.aab`, and copied to `app/dist/`.
+- `libvlc/clean.sh` deletes the libvlc build output so the next build starts from scratch.
+
 ## 0.0.2 - unreleased
 
 ### Changes
