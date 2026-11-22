@@ -9,6 +9,7 @@
     <string name="cam_url_hint">rtsp://usuário:senha@ip:porta/caminho</string>
     <string name="channel_url">Channel 2</string>
     <string name="channel_url_hint">rtsp://usuário:senha@ip:porta/caminho2</string>
+    <string name="no_channel_2">Não há um segundo stream. Adicione um em Channel 2 no editor da câmera, por exemplo o substream da câmera.</string>
     <string name="add_channel">Add channel</string>
     <string name="del_channel">Delete channel</string>
     <string name="channel">Channel</string>

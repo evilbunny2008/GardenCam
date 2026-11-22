@@ -204,15 +204,25 @@ class StreamsActivity : AppCompatActivity(), Layout {
 
             loadings[id] = true
         }
-        if (isChannelsAvailable) {
-            initChannel()
-        }
+        initChannel(isChannelsAvailable)
     }
 
-    private fun initChannel() {
-        var channel = StreamData.getChannel(isGroup)
-        binding.btnChannel.setImageResource(Utils.getChannelButton(channel))
+    // The channel button is always shown. Without a second stream URL (Channel 2 in the camera
+    // editor) it is greyed out and explains how to add one.
+    private fun initChannel(available: Boolean) {
         binding.btnChannel.visibility = View.VISIBLE
+        if (!available) {
+            binding.btnChannel.setImageResource(Utils.getChannelButton(0))
+            binding.btnChannel.alpha = 0.4f
+            binding.btnChannel.setOnClickListener {
+                android.widget.Toast.makeText(this, R.string.no_channel_2,
+                    android.widget.Toast.LENGTH_LONG).show()
+            }
+            return
+        }
+        var channel = StreamData.getChannel(isGroup)
+        binding.btnChannel.alpha = 1f
+        binding.btnChannel.setImageResource(Utils.getChannelButton(channel))
         binding.btnChannel.setOnClickListener {
             channel = if (channel != 1) 1 else 0
             StreamData.setChannel(channel, isGroup)

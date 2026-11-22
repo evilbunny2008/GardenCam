@@ -8,6 +8,7 @@
     <string name="cam_url_hint">rtsp://user:password@ip:port/path</string>
     <string name="channel_url">Kanał 2</string>
     <string name="channel_url_hint">rtsp://user:password@ip:port/path2</string>
+    <string name="no_channel_2">Brak drugiego strumienia. Dodaj go jako Kanał 2 w edytorze kamery, np. strumień pomocniczy kamery.</string>
     <string name="add_channel">Dodaj kanał</string>
     <string name="del_channel">Usuń kanał</string>
     <string name="channel">Kanał</string>

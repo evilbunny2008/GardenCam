@@ -1,0 +1,1 @@
+- Main/sub stream button is always shown on the stream screen

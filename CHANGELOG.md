@@ -1,3 +1,9 @@
+## 0.0.4 - unreleased
+
+### Changes
+- The stream screen always shows the channel (main/sub stream) button. Without a second stream URL
+  it is greyed out, and tapping it explains how to add one under **Channel 2** in the camera editor.
+
 ## 0.0.3 - unreleased
 
 ### Build
