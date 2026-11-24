@@ -11,6 +11,9 @@ object ONVIFUrlParser {
     fun parseOnvifUrl(url: String): ParsedOnvifUrl? {
         return try {
             val uri = URI(url)
+            // No host means the URL didn't parse as intended, e.g. a password containing an
+            // unescaped '#', '/' or '@'
+            if (uri.host == null) return null
             val userInfo = uri.userInfo
             val credentials = if (userInfo != null && userInfo.contains(":")) {
                 val parts = userInfo.split(":", limit = 2)

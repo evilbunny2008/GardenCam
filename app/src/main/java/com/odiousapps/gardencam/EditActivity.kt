@@ -206,7 +206,13 @@ class EditActivity : AppCompatActivity() {
         val parsedOnvif = if (onvifUrl.isNotEmpty()) {
             ONVIFUrlParser.parseOnvifUrl(onvifUrl)
         } else null
-        
+        // Don't save a URL that can't be used: PTZ and motion detection would silently stop
+        if (onvifUrl.isNotEmpty() && parsedOnvif == null) {
+            binding.etOnvifUrl.error = getString(R.string.err_invalid)
+            binding.etOnvifUrl.requestFocus()
+            return
+        }
+
         val isOnvifDevice = parsedOnvif != null
 
         var newStream = StreamDataModel(

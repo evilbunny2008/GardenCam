@@ -56,6 +56,8 @@ class StreamsActivity : AppCompatActivity(), Layout {
     private var ptzControlView: PTZControlView? = null
     private var motionIndicator: MotionIndicator? = null
     private var onvifManager: ONVIFManager? = null
+    // ID the motion event service was registered under (the stream URL at the time)
+    private var motionDeviceId: String? = null
     private val onvifScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     // Backchannel audio
@@ -636,9 +638,11 @@ class StreamsActivity : AppCompatActivity(), Layout {
         binding.rlStreamsBox.addView(motionIndicator)
         Log.d("MOTION_INIT", "Motion indicator added to view")
         
-        // Initialize motion event service
+        // Initialize motion event service. Remember the ID it is registered under: the camera's
+        // URL can change while this screen is open, as the editor opens on top of it.
+        val deviceId = stream.url
+        motionDeviceId = deviceId
         onvifScope.launch {
-            val deviceId = stream.url
             Log.d("MOTION_INIT", "Initializing motion event service for device: $deviceId")
             
             val service = onvifManager?.initializeMotionEventService(deviceId, serviceUrl, credentials)
@@ -678,11 +682,7 @@ class StreamsActivity : AppCompatActivity(), Layout {
         super.onDestroy()
         onvifScope.cancel()
 
-        if (!isGroup && streams.isNotEmpty()) {
-            StreamData.getById(streams[0])?.url?.let {
-                onvifManager?.releaseMotionEventService(it)
-            }
-        }
+        motionDeviceId?.let { onvifManager?.releaseMotionEventService(it) }
     }
 
 }

@@ -1,3 +1,11 @@
+## 0.0.7 - unreleased
+
+### Fixes
+- The camera editor no longer saves an ONVIF URL it can't read. It used to save the camera without
+  its ONVIF settings, and PTZ and motion detection quietly stopped; the field now shows an error.
+- Motion detection stops when the stream screen closes, even if the camera's stream address was
+  changed in the editor meanwhile. It used to keep polling the camera until the app was stopped.
+
 ## 0.0.6 - unreleased
 
 ### Changes
