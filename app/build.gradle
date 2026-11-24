@@ -1,5 +1,8 @@
 import com.android.build.api.artifact.SingleArtifact
 
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
+
 plugins {
     id 'com.android.application'
 }
@@ -78,8 +81,7 @@ abstract class RenameBundleTask extends DefaultTask {
         }
         def destination = destinationFile.get().asFile
         destination.parentFile.mkdirs()
-        java.nio.file.Files.copy(file.toPath(), destination.toPath(),
-                java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+        Files.copy(file.toPath(), destination.toPath(), StandardCopyOption.REPLACE_EXISTING)
         logger.lifecycle("renameBundle: copied to $destination")
         // Leave the original in place: the bundle tasks stay up to date between runs and won't
         // recreate it, but produceBundleIdeListingFile and this task need it on the next build.
